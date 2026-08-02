@@ -1,74 +1,74 @@
 # Ceaseless Intelligence — Landing Page
 
-Landing page satu halaman (static HTML/CSS/JS), dark mode elegan, dibangun dari PRD `Ceaseless Intelligence Landing Page v1.0`.
+A single-page landing page (static HTML/CSS/JS) with an elegant dark mode, built from the `Ceaseless Intelligence Landing Page v1.0` PRD.
 
-## Menjalankan secara lokal
+## Running locally
 
 ```bash
 cd ceaseless-intellegence
 python3 -m http.server 8080
-# buka http://localhost:8080
+# open http://localhost:8080
 ```
 
-Tidak ada build step — semua file statis (`index.html`, `css/style.css`, `js/main.js`).
+No build step — everything is static (`index.html`, `css/style.css`, `js/main.js`).
 
-## Struktur file
+## File structure
 
 ```
-index.html            Halaman utama (14 section sesuai PRD + form lead)
-thank-you.html         Halaman terima kasih setelah form submit
-privacy-policy.html    Draf kebijakan privasi (perlu review legal)
-terms-of-service.html  Draf ketentuan layanan (perlu review legal)
+index.html            Main page (14 sections per the PRD + lead form)
+thank-you.html         Thank-you page after form submission
+privacy-policy.html    Privacy policy draft (needs legal review)
+terms-of-service.html  Terms of service draft (needs legal review)
 css/style.css          Design system (dark navy + graphite + growth green)
-js/main.js             Nav mobile, accordion FAQ, tracking, submit form
+js/main.js             Mobile nav, FAQ accordion, tracking, form submission
 ```
 
-## Sebelum go-live — isi placeholder berikut
+## Before go-live — fill in the following placeholders
 
-Bagian ini fungsional secara visual/UX, tapi butuh kredensial asli sebelum terhubung ke sistem produksi.
+These sections work visually/functionally, but need real credentials before connecting to production systems.
 
-### 1. HubSpot CRM (form lead)
-Edit `js/main.js` → objek `CONFIG` di bagian atas:
+### 1. HubSpot CRM (lead form)
+Edit `js/main.js` → the `CONFIG` object at the top:
 ```js
-HUBSPOT_PORTAL_ID: "",   // Portal ID HubSpot
-HUBSPOT_FORM_GUID: "",   // Form GUID dari HubSpot
+HUBSPOT_PORTAL_ID: "",   // HubSpot Portal ID
+HUBSPOT_FORM_GUID: "",   // Form GUID from HubSpot
 ```
-Selama kosong, form akan tampil sukses secara lokal (demo mode) tanpa mengirim data ke mana pun — aman untuk testing/demo klien.
+While empty, the form will show a success message locally (demo mode) without sending data anywhere — safe for testing/client demos.
 
 ### 2. Google Analytics 4
-Di `index.html`, uncomment blok `<script>` gtag.js di `<head>` dan ganti `G-XXXXXXXXXX` dengan Measurement ID asli. Event yang sudah di-track otomatis lewat `js/main.js`: `hero_cta_click`, `whatsapp_click`, `form_started`, `form_submitted`, `faq_opened`, `scroll_depth`, `section_viewed`.
+In `index.html`, uncomment the gtag.js `<script>` block in `<head>` and replace `G-XXXXXXXXXX` with the real Measurement ID. Events already tracked automatically via `js/main.js`: `hero_cta_click`, `whatsapp_click`, `form_started`, `form_submitted`, `faq_opened`, `scroll_depth`, `section_viewed`.
 
 ### 3. Google Calendar Appointment Schedule
-Cari `<!-- GOOGLE CALENDAR BOOKING PLACEHOLDER -->` di `index.html` (section Final CTA) dan ganti div placeholder dengan `<iframe>` dari Google Calendar → Settings → Appointment schedules → Share.
+Find `<!-- GOOGLE CALENDAR BOOKING PLACEHOLDER -->` in `index.html` (Final CTA section) and replace the placeholder div with an `<iframe>` from Google Calendar → Settings → Appointment schedules → Share.
 
-### 4. Nomor WhatsApp
-Ganti `6280000000000` di tiga tempat (tombol floating, tombol CTA di section final, link footer) dengan nomor WhatsApp bisnis resmi.
+### 4. WhatsApp number
+Replace `6280000000000` in three places (floating button, CTA button in the final section, footer link) with the official business WhatsApp number.
 
-### 5. Email & kontak lain
-Ganti `hello@ceaseless-intelligence.com`, link LinkedIn (`#`), dan lokasi kantor di footer `index.html`.
+### 5. Email & other contact info
+Replace `hello@ceaseless-intelligence.com`, the LinkedIn link (`#`), and the office location in the `index.html` footer.
 
 ### 6. Domain & SSL
-Deploy ke hosting statis (Cloudflare Pages / Netlify / Vercel) dengan custom domain + SSL otomatis.
+Deploy to static hosting (Cloudflare Pages / Netlify / Vercel) with a custom domain + automatic SSL.
 
 ### 7. Legal
-`privacy-policy.html` dan `terms-of-service.html` adalah draf — wajib direview pengacara/legal sebelum publish, terutama kepatuhan UU PDP.
+`privacy-policy.html` and `terms-of-service.html` are drafts — they must be reviewed by a lawyer/legal counsel before publishing, especially for compliance with Indonesia's Personal Data Protection Law (UU PDP).
 
-## Catatan desain
+## Design notes
 
-- Tidak ada foto stok "robot AI" atau visual futuristik generik, sesuai arahan PRD — visual hero memakai representasi abstrak pipeline/data (bar chart, node quotation, racking) dengan CSS/SVG.
-- Saat foto asli tersedia (gudang, tim sales, racking, towing/car carrier), foto tersebut bisa disisipkan menggantikan `.hero__visual`, kartu industri, dan section "Why" untuk memperkuat kredibilitas.
-- Section "Proof / Case Studies" sengaja diganti dengan "Apa yang Akan Kami Ukur" karena PRD melarang testimonial/hasil yang belum terbukti. Setelah ada data klien nyata (dengan izin), section ini bisa diganti dengan format case study sesuai PRD §11.
+- No generic "AI robot" stock photos or futuristic visuals, per the PRD's direction — the hero visual uses an abstract representation of a pipeline/data (bar chart, quotation node, racking) built with CSS/SVG.
+- Once real photos are available (warehouse, sales team, racking, towing/car carrier), they can be swapped in to replace `.hero__visual`, the industry cards, and the "Why" section to strengthen credibility.
+- The "Proof / Case Studies" section was intentionally replaced with "What We'll Measure" because the PRD prohibits unproven claims/results. Once real client data exists (with permission), this section can be replaced with a case-study format per PRD §11.
 
-## Checklist fungsional (mengacu ke PRD §15 Acceptance Criteria)
+## Functional checklist (based on PRD §15 Acceptance Criteria)
 
-- [x] Target market dinyatakan akurat
-- [x] Dua layanan dijelaskan jelas (lead gen = entry service, AI = diagnosis-led)
-- [x] Tidak ada klaim yang belum terbukti (tanpa "guaranteed", "trusted by hundreds", dll)
-- [x] Semua tombol CTA berfungsi (scroll ke section / WhatsApp / form)
-- [x] Layout mobile teruji (390px–1440px)
-- [x] Kebijakan privasi & ketentuan layanan dipublikasikan (draf)
-- [ ] Form submissions masuk ke HubSpot — butuh Portal ID + Form GUID asli
-- [ ] Google Calendar booking aktif — butuh link embed asli
-- [ ] Analytics events terverifikasi di GA4 — butuh Measurement ID asli
-- [ ] Gambar memiliki hak pakai legal — belum ada foto asli terpasang
-- [ ] Founder & CTO menyetujui seluruh klaim di halaman ini
+- [x] Target market stated accurately
+- [x] Two services clearly explained (lead gen = entry service, AI = diagnosis-led)
+- [x] No unproven claims (no "guaranteed", "trusted by hundreds", etc.)
+- [x] All CTA buttons functional (scroll to section / WhatsApp / form)
+- [x] Mobile layout tested (390px–1440px)
+- [x] Privacy policy & terms of service published (draft)
+- [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID
+- [ ] Google Calendar booking active — needs real embed link
+- [ ] Analytics events verified in GA4 — needs real Measurement ID
+- [ ] Images have legal usage rights — no real photos installed yet
+- [ ] Founder & CTO have approved all claims on this page

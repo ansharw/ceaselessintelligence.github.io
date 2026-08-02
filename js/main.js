@@ -2,21 +2,21 @@
   "use strict";
 
   /* ============================================================
-     CONFIG — isi placeholder di bawah sebelum go-live.
+     CONFIG — fill in the placeholders below before go-live.
      ============================================================ */
   var CONFIG = {
     // HubSpot Forms API: https://legacydocs.hubspot.com/docs/methods/forms/submit_form
-    HUBSPOT_PORTAL_ID: "", // contoh: "12345678"
-    HUBSPOT_FORM_GUID: "", // contoh: "aaaa1111-bb22-cc33-dd44-eeeeee555555"
-    // Google Analytics 4 measurement ID (dipakai jika GA4 di-load di index.html)
+    HUBSPOT_PORTAL_ID: "", // example: "12345678"
+    HUBSPOT_FORM_GUID: "", // example: "aaaa1111-bb22-cc33-dd44-eeeeee555555"
+    // Google Analytics 4 measurement ID (used if GA4 is loaded in index.html)
     GA4_ID: "G-XXXXXXXXXX",
-    // Redirect setelah form berhasil dikirim
+    // Redirect after the form is successfully submitted
     THANK_YOU_URL: "thank-you.html"
   };
 
   /* ============================================================
-     Analytics helper — mengirim event ke dataLayer (GA4/GTM) bila
-     tersedia. Aman dipanggil walau GA4 belum dipasang (no-op).
+     Analytics helper — sends an event to dataLayer (GA4/GTM) when
+     available. Safe to call even if GA4 isn't installed yet (no-op).
      ============================================================ */
   function trackEvent(eventName, params) {
     window.dataLayer = window.dataLayer || [];
@@ -133,7 +133,7 @@
       });
     });
 
-    // Section viewed tracking (Layanan, FAQ, Konsultasi) via IntersectionObserver
+    // Section viewed tracking (Services, FAQ, Consultation) via IntersectionObserver
     if ("IntersectionObserver" in window) {
       var watched = ["layanan", "faq", "konsultasi"];
       var seen = {};
@@ -210,7 +210,7 @@
 
       var submitBtn = form.querySelector("button[type=submit]");
       submitBtn.disabled = true;
-      submitBtn.textContent = "Mengirim...";
+      submitBtn.textContent = "Sending...";
 
       var hasHubspotConfig = CONFIG.HUBSPOT_PORTAL_ID && CONFIG.HUBSPOT_FORM_GUID;
 
@@ -222,7 +222,7 @@
         .then(function () {
           trackEvent("form_submitted", { industry: data.industry, challenge: data.challenge });
           status.textContent =
-            "Terima kasih. Informasi Anda telah kami terima. Tim Ceaseless Intelligence akan meninjau kebutuhan bisnis Anda dan menghubungi Anda melalui email atau WhatsApp.";
+            "Thank you. We've received your information. The Ceaseless Intelligence team will review your business needs and reach out via email or WhatsApp.";
           status.className = "form-status is-success";
           form.reset();
           if (hasHubspotConfig) {
@@ -232,12 +232,12 @@
         .catch(function (err) {
           console.error("Lead form submission failed:", err);
           status.textContent =
-            "Maaf, terjadi kendala saat mengirim formulir. Silakan coba lagi atau hubungi kami melalui WhatsApp.";
+            "Sorry, something went wrong while submitting the form. Please try again or contact us via WhatsApp.";
           status.className = "form-status is-error";
         })
         .finally(function () {
           submitBtn.disabled = false;
-          submitBtn.textContent = "Kirim Permintaan Konsultasi";
+          submitBtn.textContent = "Send Consultation Request";
         });
     });
   }
