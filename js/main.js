@@ -3,14 +3,17 @@
 
   /* ============================================================
      CONFIG — fill in the placeholders below before go-live.
+     HubSpot credentials are NOT here anymore — they live server-side
+     as environment variables read by functions/api/submit-lead.js,
+     so they're never shipped to the browser.
      ============================================================ */
   var CONFIG = {
-    // HubSpot Forms API: https://legacydocs.hubspot.com/docs/methods/forms/submit_form
-    HUBSPOT_PORTAL_ID: "", // example: "12345678"
-    HUBSPOT_FORM_GUID: "", // example: "aaaa1111-bb22-cc33-dd44-eeeeee555555"
-    // Google Analytics 4 measurement ID (used if GA4 is loaded in index.html)
+    // Google Analytics 4 measurement ID. This one is meant to be public
+    // (it's designed to be embedded client-side) — safe to leave here.
     GA4_ID: "G-XXXXXXXXXX",
-    // Redirect after the form is successfully submitted
+    // Endpoint the lead form posts to (see functions/api/submit-lead.js)
+    SUBMIT_ENDPOINT: "/api/submit-lead",
+    // Redirect after the form is successfully submitted (skipped in demo mode)
     THANK_YOU_URL: "thank-you.html"
   };
 
@@ -26,7 +29,32 @@
     }
   }
 
+  /* ============================================================
+     GA4 bootstrap — loaded from this external file (not an inline
+     <script> in index.html) so the site's Content-Security-Policy
+     can stay strict (script-src 'self' + googletagmanager.com only,
+     no 'unsafe-inline' needed). No-ops until CONFIG.GA4_ID is a real
+     Measurement ID.
+     ============================================================ */
+  function initGA4() {
+    var id = CONFIG.GA4_ID;
+    if (!id || id.indexOf("XXXX") !== -1) return;
+
+    var script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag("js", new Date());
+    window.gtag("config", id);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    initGA4();
     initStickyHeader();
     initMobileNav();
     initAccordion();
@@ -158,11 +186,13 @@
   /* ============================================================
      Lead form submission
      - Tracks "form_started" on first interaction.
-     - Basic honeypot spam check.
-     - Submits to HubSpot Forms API when CONFIG is filled in.
-     - Falls back to a local success message (demo mode) when
-       HubSpot credentials are not yet configured, so the form is
-       fully testable before integration is wired up.
+     - Basic honeypot spam check (also re-checked server-side).
+     - Always posts to CONFIG.SUBMIT_ENDPOINT (our own serverless
+       function), which is the only thing that talks to HubSpot.
+       The browser never sees HubSpot credentials.
+     - The endpoint replies { demo: true } when HubSpot isn't
+       configured yet server-side, so the form stays fully testable
+       before integration is wired up.
      ============================================================ */
   function initLeadForm() {
     var form = document.getElementById("leadForm");
@@ -205,27 +235,23 @@
         whatsapp: form.whatsapp.value.trim(),
         website: form.website.value.trim(),
         industry: form.industry.value,
-        challenge: form.challenge.value
+        challenge: form.challenge.value,
+        companyWebsite2: honeypot ? honeypot.value : ""
       };
 
       var submitBtn = form.querySelector("button[type=submit]");
       submitBtn.disabled = true;
       submitBtn.textContent = "Sending...";
 
-      var hasHubspotConfig = CONFIG.HUBSPOT_PORTAL_ID && CONFIG.HUBSPOT_FORM_GUID;
-
-      var submission = hasHubspotConfig
-        ? submitToHubspot(data)
-        : Promise.resolve({ demo: true });
-
-      submission
-        .then(function () {
+      submitLead(data)
+        .then(function (result) {
           trackEvent("form_submitted", { industry: data.industry, challenge: data.challenge });
-          status.textContent =
-            "Thank you. We've received your information. The Ceaseless Intelligence team will review your business needs and reach out via email or WhatsApp.";
-          status.className = "form-status is-success";
           form.reset();
-          if (hasHubspotConfig) {
+          if (result && result.demo) {
+            status.textContent =
+              "Thank you. We've received your information. The Ceaseless Intelligence team will review your business needs and reach out via email or WhatsApp.";
+            status.className = "form-status is-success";
+          } else {
             window.location.href = CONFIG.THANK_YOU_URL;
           }
         })
@@ -242,36 +268,13 @@
     });
   }
 
-  function submitToHubspot(data) {
-    var url =
-      "https://api.hsforms.com/submissions/v3/integration/submit/" +
-      CONFIG.HUBSPOT_PORTAL_ID +
-      "/" +
-      CONFIG.HUBSPOT_FORM_GUID;
-
-    var payload = {
-      fields: [
-        { name: "firstname", value: data.fullName },
-        { name: "company", value: data.companyName },
-        { name: "jobtitle", value: data.jobTitle },
-        { name: "email", value: data.email },
-        { name: "phone", value: data.whatsapp },
-        { name: "website", value: data.website },
-        { name: "industry", value: data.industry },
-        { name: "main_challenge", value: data.challenge }
-      ],
-      context: {
-        pageUri: window.location.href,
-        pageName: document.title
-      }
-    };
-
-    return fetch(url, {
+  function submitLead(data) {
+    return fetch(CONFIG.SUBMIT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(data)
     }).then(function (res) {
-      if (!res.ok) throw new Error("HubSpot submission failed: " + res.status);
+      if (!res.ok) throw new Error("Submission failed: " + res.status);
       return res.json();
     });
   }

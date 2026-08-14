@@ -1,0 +1,12 @@
+{
+  "name": "ceaselessintelligence",
+  "private": true,
+  "description": "Ceaseless Intelligence landing page — static site + Cloudflare Pages Function for the lead form.",
+  "scripts": {
+    "dev": "wrangler pages dev . --port 8080",
+    "deploy": "wrangler pages deploy ."
+  },
+  "devDependencies": {
+    "wrangler": "^3"
+  }
+}

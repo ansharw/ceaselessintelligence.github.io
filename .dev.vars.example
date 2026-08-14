@@ -1,0 +1,9 @@
+# Copy this file to .dev.vars for local `npm run dev` testing.
+# .dev.vars is gitignored — never commit real credentials.
+#
+# In production these are set as encrypted environment variables in the
+# Cloudflare Pages dashboard (Settings -> Environment variables -> Secret),
+# NOT in this repo.
+
+HUBSPOT_PORTAL_ID=
+HUBSPOT_FORM_GUID=

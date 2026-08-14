@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies / tooling
+node_modules/
+.wrangler/
+
+# Secrets — never commit real credentials
+.dev.vars
+.env
+.env.*
