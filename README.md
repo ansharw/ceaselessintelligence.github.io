@@ -123,8 +123,8 @@ needed. Events already tracked: `hero_cta_click`, `form_started`,
 ### 3. Google Calendar Appointment Schedule
 Find `<!-- GOOGLE CALENDAR BOOKING PLACEHOLDER -->` in `index.html` (Contact section) and replace the placeholder div with an `<iframe>` from Google Calendar → Settings → Appointment schedules → Share.
 
-### 4. Email & other contact info
-Replace `hello@ceaselessintelligence.com` wherever it's referenced (currently only in `privacy-policy.html` / `terms-of-service.html` mentions of a footer contact — the homepage footer no longer lists a direct email; add one back in the footer markup if you want it visible there too).
+### 4. Email & WhatsApp
+Official contact channels are `ceaselessintelligence@gmail.com` and WhatsApp `+62 812-9112-9561`, both live in the `index.html` footer (`.footer-contact`), the Contact section's WhatsApp button, and the floating WhatsApp button. Update all four spots together if either channel changes — `privacy-policy.html` / `terms-of-service.html` just reference "the email listed in the footer" generically, so no edit needed there.
 
 ### 5. CEO photo
 The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder & CEO) in `index.html` (`.leader-card`). Swap the placeholder `<svg>` for a real `<img src="assets/ceo.jpg" alt="Syahreza Daffa Rafiali">` once a photo file is available.

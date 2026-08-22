@@ -637,30 +637,52 @@ p { margin: 0; color: var(--text-muted); }
   color: var(--light-gray);
 }
 
-/* Vertical flow diagram (market-to-opportunity / workflow-to-system) */
-.flow-diagram {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 420px;
-  margin: 0 auto;
+/* Vertical flow diagram — connected numbered stepper
+   (market-to-opportunity / workflow-to-system / sidebar summaries) */
+.flow-diagram__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--blue-bright);
+  margin: 0 0 18px;
 }
+.flow-diagram { display: flex; flex-direction: column; max-width: 380px; }
 .flow-step {
-  width: 100%;
-  text-align: center;
-  padding: 14px 20px;
-  border-radius: var(--radius-sm);
-  background: var(--graphite-soft);
-  border: 1px solid var(--border-soft);
-  font-size: 0.92rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+.flow-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 36px;
+  bottom: -10px;
+  width: 2px;
+  background: var(--border-metal);
+}
+.flow-step__num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--metal-gradient);
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
+}
+.flow-step__label {
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--warm-white);
-}
-.flow-arrow {
-  color: var(--metal);
-  font-size: 1.2rem;
-  line-height: 1;
-  padding: 6px 0;
+  line-height: 1.3;
 }
 
 /* Accordion */
@@ -770,22 +792,35 @@ p { margin: 0; color: var(--text-muted); }
 .form-row textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
 
 .checkbox-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 .checkbox-option {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  border-radius: 100px;
   border: 1px solid rgba(247,248,250,0.14);
   background: var(--navy-soft);
-  font-size: 0.86rem;
+  font-size: 0.84rem;
+  font-weight: 500;
   color: var(--light-gray);
+  cursor: pointer;
+  transition: border-color .15s var(--ease), background .15s var(--ease), color .15s var(--ease);
 }
-.checkbox-option input { accent-color: var(--blue); flex-shrink: 0; }
+.checkbox-option:hover { border-color: rgba(46,111,242,0.4); }
+.checkbox-option:has(input:checked) {
+  background: var(--blue-soft);
+  border-color: rgba(46,111,242,0.6);
+  color: var(--warm-white);
+}
+.checkbox-option input {
+  accent-color: var(--blue);
+  flex-shrink: 0;
+  width: 15px; height: 15px;
+}
 
 .consent-row {
   display: flex;
@@ -895,7 +930,6 @@ p { margin: 0; color: var(--text-muted); }
   .model-arrow { transform: rotate(90deg); padding: 4px 0; }
   .footer-grid { grid-template-columns: 1fr; }
   .form-row--split { flex-direction: column; }
-  .checkbox-grid { grid-template-columns: 1fr; }
   .section { padding: 70px 0; }
   .hero { padding: 70px 0 80px; }
   .leader-card { flex-direction: column; text-align: center; }
