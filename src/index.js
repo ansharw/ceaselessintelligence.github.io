@@ -18,7 +18,7 @@ const SECURITY_HEADERS = {
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "geolocation=(), camera=(), microphone=(), payment=()",
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com; frame-src https://calendar.google.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'"
+    "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'"
 };
 
 const REQUIRED_FIELDS = [

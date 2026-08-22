@@ -739,24 +739,6 @@ p { margin: 0; color: var(--text-muted); }
 .cta-split__text > p { margin-bottom: 10px; }
 .cta-split__text .check-list { margin: 18px 0 8px; }
 
-.booking-embed { margin-top: 40px; }
-.booking-embed__frame {
-  border: 1px dashed var(--border-soft);
-  border-radius: var(--radius-md);
-  min-height: 160px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--graphite-soft);
-}
-.booking-embed__placeholder { text-align: center; padding: 24px; }
-.booking-embed__placeholder p { margin-bottom: 8px; font-size: 0.88rem; }
-.booking-embed__placeholder code {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  background: var(--navy-soft);
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
 .lead-form {
   background: var(--graphite-soft);
   border: 1px solid var(--border-soft);

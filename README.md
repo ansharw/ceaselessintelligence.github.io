@@ -121,7 +121,13 @@ needed. Events already tracked: `hero_cta_click`, `form_started`,
 `form_submitted`, `scroll_depth`, `section_viewed`.
 
 ### 3. Google Calendar Appointment Schedule
-Find `<!-- GOOGLE CALENDAR BOOKING PLACEHOLDER -->` in `index.html` (Contact section) and replace the placeholder div with an `<iframe>` from Google Calendar → Settings → Appointment schedules → Share.
+Already wired up as a **link**, not an iframe — Google's Appointment Schedule
+booking pages send `X-Frame-Options: SAMEORIGIN`, so they refuse to render
+inside anyone else's `<iframe>` (confirmed by checking response headers
+directly). The "Book a Time on Google Calendar" button in the Contact
+section (`index.html`) opens the booking page in a new tab instead. To
+change the schedule, just update that link's `href` to the new booking URL —
+no other code changes needed.
 
 ### 4. Email & WhatsApp
 Official contact channels are `ceaselessintelligence@gmail.com` and WhatsApp `+62 812-9112-9561`, both live in the `index.html` footer (`.footer-contact`), the Contact section's WhatsApp button, and the floating WhatsApp button. Update all four spots together if either channel changes — `privacy-policy.html` / `terms-of-service.html` just reference "the email listed in the footer" generically, so no edit needed there.
@@ -163,7 +169,7 @@ The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder &
 - [x] Mobile layout tested (390px–1440px)
 - [x] Privacy policy & terms of service published (draft)
 - [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID (set as Cloudflare secrets) + the 3 custom properties created in HubSpot
-- [ ] Google Calendar booking active — needs real embed link
+- [x] Google Calendar booking link active (opens in new tab, not embedded)
 - [ ] Analytics events verified in GA4 — needs real Measurement ID
 - [ ] CEO photo installed — placeholder avatar in place for now
 - [ ] Custom domain connected in Cloudflare
