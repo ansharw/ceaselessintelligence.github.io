@@ -1,6 +1,6 @@
 # Ceaseless Intelligence — Landing Page
 
-A single-page landing page (static HTML/CSS/JS) with an elegant dark navy/blue/metal theme, built from the `Ceaseless Intelligence Landing Page v1.0` PRD.
+A single-page landing page (static HTML/CSS/JS) with an elegant dark navy/blue/metal theme, built from the locked "Turn Intelligence Into Growth" website copy.
 
 ## Architecture
 
@@ -40,12 +40,12 @@ runs `src/index.js` locally, so the form works exactly like production.
 ## File structure
 
 ```
-index.html                Main page (14 sections per the PRD + lead form)
+index.html                Main page (nav, hero, services, why, process, industries, about, contact)
 thank-you.html             Thank-you page after form submission
 privacy-policy.html        Privacy policy draft (needs legal review)
 terms-of-service.html      Terms of service draft (needs legal review)
 css/style.css              Design system (navy/black + electric blue + steel metal)
-js/main.js                 Mobile nav, FAQ accordion, tracking, form submission
+js/main.js                 Mobile nav, tracking, form submission
 src/index.js                The Worker: form handler + security headers + static asset fallback
 wrangler.toml               Cloudflare Worker/assets configuration
 .assetsignore                Files excluded from the public static site
@@ -109,32 +109,34 @@ serving the new host provides.
 ### 1. HubSpot CRM (lead form)
 Set `HUBSPOT_PORTAL_ID` and `HUBSPOT_FORM_GUID` as environment variables (see deployment steps above) — not in any file in this repo. While unset, the form shows a success message in "demo mode" without sending data anywhere.
 
+The form also submits three **custom** HubSpot properties (`company_description`,
+`improvement_goal`, `services_interested`) — create these under HubSpot
+**Settings → Properties** (Contact or Deal, matching your form's object type)
+before go-live, or submissions with those fields will be rejected by HubSpot.
+
 ### 2. Google Analytics 4
 In `js/main.js`, replace `CONFIG.GA4_ID` with the real Measurement ID.
 `initGA4()` loads gtag.js and starts tracking automatically — no HTML edits
-needed. Events already tracked: `hero_cta_click`, `whatsapp_click`,
-`form_started`, `form_submitted`, `faq_opened`, `scroll_depth`, `section_viewed`.
+needed. Events already tracked: `hero_cta_click`, `form_started`,
+`form_submitted`, `scroll_depth`, `section_viewed`.
 
 ### 3. Google Calendar Appointment Schedule
-Find `<!-- GOOGLE CALENDAR BOOKING PLACEHOLDER -->` in `index.html` (Final CTA section) and replace the placeholder div with an `<iframe>` from Google Calendar → Settings → Appointment schedules → Share.
+Find `<!-- GOOGLE CALENDAR BOOKING PLACEHOLDER -->` in `index.html` (Contact section) and replace the placeholder div with an `<iframe>` from Google Calendar → Settings → Appointment schedules → Share.
 
-### 4. WhatsApp number
-Replace `6280000000000` in three places (floating button, CTA button in the final section, footer link) with the official business WhatsApp number.
+### 4. Email & other contact info
+Replace `hello@ceaselessintelligence.com` wherever it's referenced (currently only in `privacy-policy.html` / `terms-of-service.html` mentions of a footer contact — the homepage footer no longer lists a direct email; add one back in the footer markup if you want it visible there too).
 
-### 5. Email & other contact info
-Replace `hello@ceaselessintelligence.com`, the LinkedIn link (`#`), and the office location in the `index.html` footer.
-
-### 6. CEO photo
+### 5. CEO photo
 The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder & CEO) in `index.html` (`.leader-card`). Swap the placeholder `<svg>` for a real `<img src="assets/ceo.jpg" alt="Syahreza Daffa Rafiali">` once a photo file is available.
 
-### 7. Legal
+### 6. Legal
 `privacy-policy.html` and `terms-of-service.html` are drafts — they must be reviewed by a lawyer/legal counsel before publishing, especially for compliance with Indonesia's Personal Data Protection Law (UU PDP).
 
 ## Security notes
 
-- No secrets live in client-side code. The only values shipped to the
-  browser are public by design (GA4 Measurement ID, WhatsApp number, email —
-  all meant to be visible).
+- No secrets live in client-side code. The only value shipped to the
+  browser that matters here is the GA4 Measurement ID, which is public
+  by design.
 - `src/index.js` sets a Content-Security-Policy, `X-Frame-Options: DENY`,
   `X-Content-Type-Options: nosniff`, and a restrictive `Permissions-Policy`
   on every response.
@@ -149,22 +151,20 @@ The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder &
 
 ## Design notes
 
-- No generic "AI robot" stock photos or futuristic visuals, per the PRD's direction — the hero visual uses an abstract representation of a pipeline/data (bar chart, quotation node, racking) built with CSS/SVG.
-- Once real photos are available (warehouse, sales team, racking, towing/car carrier), they can be swapped in to replace `.hero__visual`, the industry cards, and the "Why" section to strengthen credibility.
-- The "Proof / Case Studies" section was intentionally replaced with "What We'll Measure" because the PRD prohibits unproven claims/results. Once real client data exists (with permission), this section can be replaced with a case-study format per PRD §11.
+- No generic "AI robot" stock photos or futuristic visuals — the hero visual uses an abstract representation of a pipeline/data (bar chart, follow-up automation, CRM sync nodes) built with CSS/SVG.
+- Once real photos are available (team, office, product), they can be swapped in to replace `.hero__visual` and the "About" section to strengthen credibility.
+- Copy is locked per the approved "Turn Intelligence Into Growth" version — treat `index.html`'s visible text as final unless a new copy revision is explicitly provided.
 
-## Functional checklist (based on PRD §15 Acceptance Criteria)
+## Functional checklist
 
-- [x] Target market stated accurately
-- [x] Two services clearly explained (lead gen = entry service, AI = diagnosis-led)
-- [x] No unproven claims (no "guaranteed", "trusted by hundreds", etc.)
-- [x] All CTA buttons functional (scroll to section / WhatsApp / form)
+- [x] Locked website copy implemented (nav, hero, services, why, process, industries, about, contact, footer)
+- [x] Two services clearly explained (B2B Lead Generation, AI Solutions & Automation)
+- [x] All CTA buttons functional (scroll to section / form)
 - [x] Mobile layout tested (390px–1440px)
 - [x] Privacy policy & terms of service published (draft)
-- [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID (set as Cloudflare secrets)
+- [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID (set as Cloudflare secrets) + the 3 custom properties created in HubSpot
 - [ ] Google Calendar booking active — needs real embed link
 - [ ] Analytics events verified in GA4 — needs real Measurement ID
 - [ ] CEO photo installed — placeholder avatar in place for now
-- [ ] Images have legal usage rights — no real photos installed yet
 - [ ] Custom domain connected in Cloudflare
 - [ ] Founder & CTO have approved all claims on this page

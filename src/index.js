@@ -24,11 +24,9 @@ const SECURITY_HEADERS = {
 const REQUIRED_FIELDS = [
   "fullName",
   "companyName",
-  "jobTitle",
   "email",
-  "whatsapp",
-  "industry",
-  "challenge"
+  "companyDescription",
+  "improvementGoal"
 ];
 
 export default {
@@ -95,16 +93,19 @@ async function handleSubmitLead(request, env) {
 
   const hubspotUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`;
 
+  const services = Array.isArray(data.services) ? data.services.filter((s) => typeof s === "string") : [];
+
   const payload = {
     fields: [
       { name: "firstname", value: data.fullName.trim() },
       { name: "company", value: data.companyName.trim() },
-      { name: "jobtitle", value: data.jobTitle.trim() },
       { name: "email", value: data.email.trim() },
-      { name: "phone", value: data.whatsapp.trim() },
       { name: "website", value: (data.website || "").trim() },
-      { name: "industry", value: data.industry },
-      { name: "main_challenge", value: data.challenge }
+      // Custom HubSpot properties — create these under Settings > Properties
+      // (Contact or Deal) before go-live, or the submission will 400.
+      { name: "company_description", value: data.companyDescription.trim() },
+      { name: "improvement_goal", value: data.improvementGoal.trim() },
+      { name: "services_interested", value: services.join(";") }
     ],
     context: {
       pageUri: request.headers.get("referer") || "",

@@ -462,6 +462,31 @@ p { margin: 0; color: var(--text-muted); }
 }
 .service-card .btn { margin-top: 12px; }
 
+/* Feature list (title + description pairs, used in service breakdowns) */
+.feature-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 8px; }
+.feature-list li {
+  position: relative;
+  padding-left: 26px;
+}
+.feature-list li::before {
+  content: "";
+  position: absolute; left: 0; top: 5px;
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  background: var(--blue-soft);
+  border: 1px solid rgba(46,111,242,0.5);
+}
+.feature-list li::after {
+  content: "";
+  position: absolute; left: 4px; top: 8px;
+  width: 6px; height: 3px;
+  border-left: 2px solid var(--blue-bright);
+  border-bottom: 2px solid var(--blue-bright);
+  transform: rotate(-45deg);
+}
+.feature-list strong { display: block; font-size: 0.95rem; color: var(--warm-white); margin-bottom: 4px; }
+.feature-list p { font-size: 0.86rem; }
+
 /* Operating model */
 .model-flow {
   display: flex;
@@ -600,7 +625,7 @@ p { margin: 0; color: var(--text-muted); }
 .timeline__item h3 { font-size: 1.05rem; color: var(--warm-white); margin-bottom: 6px; }
 .timeline__item p { font-size: 0.92rem; }
 
-/* Metrics */
+/* Metrics / tag pills (also reused for the industries list) */
 .metric-grid { display: flex; flex-wrap: wrap; gap: 12px; }
 .metric-pill {
   padding: 12px 20px;
@@ -610,6 +635,32 @@ p { margin: 0; color: var(--text-muted); }
   font-size: 0.86rem;
   font-weight: 500;
   color: var(--light-gray);
+}
+
+/* Vertical flow diagram (market-to-opportunity / workflow-to-system) */
+.flow-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.flow-step {
+  width: 100%;
+  text-align: center;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--graphite-soft);
+  border: 1px solid var(--border-soft);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--warm-white);
+}
+.flow-arrow {
+  color: var(--metal);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 6px 0;
 }
 
 /* Accordion */
@@ -700,7 +751,7 @@ p { margin: 0; color: var(--text-muted); }
   color: var(--light-gray);
 }
 .form-row label span { color: var(--blue-bright); margin-left: 3px; }
-.form-row input, .form-row select {
+.form-row input, .form-row select, .form-row textarea {
   width: 100%;
   padding: 12px 14px;
   border-radius: var(--radius-sm);
@@ -711,11 +762,30 @@ p { margin: 0; color: var(--text-muted); }
   font-size: 0.92rem;
   transition: border-color .15s var(--ease);
 }
-.form-row input:focus, .form-row select:focus {
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
   outline: none;
   border-color: var(--blue);
 }
 .form-row select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C96AA' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+.form-row textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(247,248,250,0.14);
+  background: var(--navy-soft);
+  font-size: 0.86rem;
+  color: var(--light-gray);
+}
+.checkbox-option input { accent-color: var(--blue); flex-shrink: 0; }
 
 .consent-row {
   display: flex;
@@ -825,6 +895,7 @@ p { margin: 0; color: var(--text-muted); }
   .model-arrow { transform: rotate(90deg); padding: 4px 0; }
   .footer-grid { grid-template-columns: 1fr; }
   .form-row--split { flex-direction: column; }
+  .checkbox-grid { grid-template-columns: 1fr; }
   .section { padding: 70px 0; }
   .hero { padding: 70px 0 80px; }
   .leader-card { flex-direction: column; text-align: center; }

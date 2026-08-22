@@ -57,7 +57,6 @@
     initGA4();
     initStickyHeader();
     initMobileNav();
-    initAccordion();
     initScrollDepthTracking();
     initClickTracking();
     initLeadForm();
@@ -102,32 +101,6 @@
   }
 
   /* ============================================================
-     FAQ accordion
-     ============================================================ */
-  function initAccordion() {
-    var items = document.querySelectorAll(".accordion__item");
-    items.forEach(function (item) {
-      var trigger = item.querySelector(".accordion__trigger");
-      if (!trigger) return;
-      trigger.addEventListener("click", function () {
-        var willOpen = !item.classList.contains("is-open");
-
-        items.forEach(function (other) {
-          other.classList.remove("is-open");
-          var t = other.querySelector(".accordion__trigger");
-          if (t) t.setAttribute("aria-expanded", "false");
-        });
-
-        if (willOpen) {
-          item.classList.add("is-open");
-          trigger.setAttribute("aria-expanded", "true");
-          trackEvent("faq_opened", { question: trigger.textContent.trim() });
-        }
-      });
-    });
-  }
-
-  /* ============================================================
      Scroll depth tracking (25/50/75/100%)
      ============================================================ */
   function initScrollDepthTracking() {
@@ -161,9 +134,9 @@
       });
     });
 
-    // Section viewed tracking (Services, FAQ, Consultation) via IntersectionObserver
+    // Section viewed tracking via IntersectionObserver
     if ("IntersectionObserver" in window) {
-      var watched = ["layanan", "faq", "konsultasi"];
+      var watched = ["services", "why-ceaseless", "how-we-work", "about", "contact"];
       var seen = {};
       var observer = new IntersectionObserver(
         function (entries) {
@@ -227,15 +200,18 @@
         return; // silently drop
       }
 
+      var services = Array.prototype.slice
+        .call(form.querySelectorAll('input[name="services"]:checked'))
+        .map(function (el) { return el.value; });
+
       var data = {
         fullName: form.fullName.value.trim(),
         companyName: form.companyName.value.trim(),
-        jobTitle: form.jobTitle.value.trim(),
         email: form.email.value.trim(),
-        whatsapp: form.whatsapp.value.trim(),
         website: form.website.value.trim(),
-        industry: form.industry.value,
-        challenge: form.challenge.value,
+        companyDescription: form.companyDescription.value.trim(),
+        improvementGoal: form.improvementGoal.value.trim(),
+        services: services,
         companyWebsite2: honeypot ? honeypot.value : ""
       };
 
@@ -245,11 +221,11 @@
 
       submitLead(data)
         .then(function (result) {
-          trackEvent("form_submitted", { industry: data.industry, challenge: data.challenge });
+          trackEvent("form_submitted", { services: data.services.join(",") });
           form.reset();
           if (result && result.demo) {
             status.textContent =
-              "Thank you. We've received your information. The Ceaseless Intelligence team will review your business needs and reach out via email or WhatsApp.";
+              "Thank you. We've received your information. The Ceaseless Intelligence team will review your business and reach out by email.";
             status.className = "form-status is-success";
           } else {
             window.location.href = CONFIG.THANK_YOU_URL;
@@ -258,12 +234,12 @@
         .catch(function (err) {
           console.error("Lead form submission failed:", err);
           status.textContent =
-            "Sorry, something went wrong while submitting the form. Please try again or contact us via WhatsApp.";
+            "Sorry, something went wrong while submitting the form. Please try again shortly.";
           status.className = "form-status is-error";
         })
         .finally(function () {
           submitBtn.disabled = false;
-          submitBtn.textContent = "Send Consultation Request";
+          submitBtn.textContent = "Start the Conversation";
         });
     });
   }
