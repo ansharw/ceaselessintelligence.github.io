@@ -4,14 +4,14 @@
   /* ============================================================
      CONFIG — fill in the placeholders below before go-live.
      HubSpot credentials are NOT here anymore — they live server-side
-     as environment variables read by functions/api/submit-lead.js,
+     as environment variables read by src/index.js (the Worker),
      so they're never shipped to the browser.
      ============================================================ */
   var CONFIG = {
     // Google Analytics 4 measurement ID. This one is meant to be public
     // (it's designed to be embedded client-side) — safe to leave here.
     GA4_ID: "G-XXXXXXXXXX",
-    // Endpoint the lead form posts to (see functions/api/submit-lead.js)
+    // Endpoint the lead form posts to (see src/index.js)
     SUBMIT_ENDPOINT: "/api/submit-lead",
     // Redirect after the form is successfully submitted (skipped in demo mode)
     THANK_YOU_URL: "thank-you.html"

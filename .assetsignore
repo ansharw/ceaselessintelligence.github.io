@@ -1,0 +1,16 @@
+# Files in this list are NOT uploaded as public static assets, even
+# though they live alongside index.html etc. at the repo root.
+# (Same syntax as .gitignore.)
+
+wrangler.toml
+package.json
+package-lock.json
+README.md
+.gitignore
+.assetsignore
+.dev.vars.example
+src/
+node_modules/
+.wrangler/
+.git/
+index-v2.html

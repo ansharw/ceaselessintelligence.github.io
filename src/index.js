@@ -1,11 +1,25 @@
 /**
- * Cloudflare Pages Function — POST /api/submit-lead
+ * Cloudflare Worker entry point (unified Workers + Static Assets model).
  *
- * Runs server-side (never shipped to the browser). This is where
- * HUBSPOT_PORTAL_ID / HUBSPOT_FORM_GUID actually live, as environment
- * variables set in the Cloudflare dashboard (or wrangler secrets) —
- * never in client-side JS.
+ * Routing:
+ *   POST /api/submit-lead  -> handled here, server-side (HubSpot creds
+ *                              live in env vars, never shipped to the browser)
+ *   everything else        -> falls through to the static site via the
+ *                              ASSETS binding (see wrangler.toml [assets])
+ *
+ * Security headers are applied to every response here (rather than
+ * relying on a Pages-only `_headers` file) so they hold regardless of
+ * platform conventions.
  */
+
+const SECURITY_HEADERS = {
+  "X-Frame-Options": "DENY",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "geolocation=(), camera=(), microphone=(), payment=()",
+  "Content-Security-Policy":
+    "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com; frame-src https://calendar.google.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'"
+};
 
 const REQUIRED_FIELDS = [
   "fullName",
@@ -17,8 +31,35 @@ const REQUIRED_FIELDS = [
   "challenge"
 ];
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    const response =
+      url.pathname === "/api/submit-lead"
+        ? await handleSubmitLead(request, env)
+        : await env.ASSETS.fetch(request);
+
+    return withSecurityHeaders(response);
+  }
+};
+
+function withSecurityHeaders(response) {
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    headers.set(key, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
+async function handleSubmitLead(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405);
+  }
 
   let data;
   try {
@@ -82,14 +123,6 @@ export async function onRequestPost(context) {
   }
 
   return jsonResponse({ ok: true });
-}
-
-// Reject anything that isn't POST (GET/PUT/DELETE etc.)
-export async function onRequest(context) {
-  if (context.request.method !== "POST") {
-    return jsonResponse({ error: "Method not allowed" }, 405);
-  }
-  return onRequestPost(context);
 }
 
 function jsonResponse(body, status = 200) {

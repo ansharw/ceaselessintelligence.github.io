@@ -4,21 +4,26 @@ A single-page landing page (static HTML/CSS/JS) with an elegant dark navy/blue/m
 
 ## Architecture
 
-The site is static (no build step, no framework) with **one serverless function** for the lead form:
+The site runs as a single **Cloudflare Worker with Static Assets** — Cloudflare's current unified model (the successor to the older, separate "Pages" product):
 
 ```
-index.html, css/, js/main.js, *.html   → static, served directly (Cloudflare Pages CDN)
-functions/api/submit-lead.js            → Cloudflare Pages Function (runs server-side)
+index.html, css/, js/main.js, *.html   → static files, served automatically via the ASSETS binding
+src/index.js                            → the Worker: routes /api/submit-lead, everything else falls through to ASSETS
 ```
 
 The browser never talks to HubSpot directly. The form POSTs to `/api/submit-lead`,
-which runs on Cloudflare's edge, reads `HUBSPOT_PORTAL_ID` / `HUBSPOT_FORM_GUID`
-from server-side environment variables, and forwards the submission. Those two
+handled in `src/index.js`, which reads `HUBSPOT_PORTAL_ID` / `HUBSPOT_FORM_GUID`
+from server-side environment variables and forwards the submission. Those two
 values — and any future secret (paid API keys, etc.) — never appear in
-client-side JS or dev tools.
+client-side JS or dev tools. Security response headers (CSP, X-Frame-Options,
+etc.) are also set in `src/index.js`, applied to every response.
 
 GA4's Measurement ID stays client-side in `js/main.js` (`CONFIG.GA4_ID`) —
 that one is designed to be public, it's not a secret.
+
+`.assetsignore` keeps repo/config files (`wrangler.toml`, `package.json`,
+`src/`, etc.) from being served as public files, even though they sit
+alongside `index.html` at the repo root.
 
 ## Running locally
 
@@ -26,14 +31,11 @@ that one is designed to be public, it's not a secret.
 npm install
 cp .dev.vars.example .dev.vars   # fill in HubSpot creds, or leave blank for demo mode
 npm run dev
-# open http://localhost:8080
+# open the local URL wrangler prints (usually http://localhost:8787)
 ```
 
-`npm run dev` runs `wrangler pages dev`, which serves the static files **and**
-runs `functions/api/submit-lead.js` locally, so the form works exactly like
-production. Opening `index.html` directly (or a plain `python3 -m http.server`)
-will serve the static pages fine but the lead form will 404 on `/api/submit-lead`
-since that route only exists when Pages Functions are running.
+`npm run dev` runs `wrangler dev`, which serves the static files **and**
+runs `src/index.js` locally, so the form works exactly like production.
 
 ## File structure
 
@@ -44,42 +46,68 @@ privacy-policy.html        Privacy policy draft (needs legal review)
 terms-of-service.html      Terms of service draft (needs legal review)
 css/style.css              Design system (navy/black + electric blue + steel metal)
 js/main.js                 Mobile nav, FAQ accordion, tracking, form submission
-functions/api/submit-lead.js  Server-side form handler (HubSpot credentials live here)
-_headers                   Security response headers (CSP, X-Frame-Options, etc.)
-wrangler.toml               Cloudflare Pages project config
+src/index.js                The Worker: form handler + security headers + static asset fallback
+wrangler.toml               Cloudflare Worker/assets configuration
+.assetsignore                Files excluded from the public static site
 .dev.vars.example           Template for local secrets (copy to .dev.vars, gitignored)
 ```
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare (step by step, from scratch)
 
-1. Push this repo to GitHub/GitLab.
-2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** → pick the repo.
-3. Build settings: **no build command**, output directory `/` (root). Cloudflare auto-detects the `functions/` folder.
-4. **Settings → Environment variables** (set for both Production and Preview):
-   - `HUBSPOT_PORTAL_ID` — mark as **Secret/Encrypted**
-   - `HUBSPOT_FORM_GUID` — mark as **Secret/Encrypted**
-5. **Custom domains** → add your domain; Cloudflare issues SSL automatically.
-6. Deploy. From then on, every push to the connected branch redeploys automatically.
+### 1. Push this repo to GitHub
+Make sure the latest code (including `wrangler.toml`, `src/index.js`, `.assetsignore`) is committed and pushed to the branch you'll deploy from (usually `main`).
 
-Alternatively, deploy from the CLI: `npm run deploy` (runs `wrangler pages deploy .`),
-then set the two secrets with `npx wrangler pages secret put HUBSPOT_PORTAL_ID` (repeat for the GUID).
+### 2. Connect the repo in Cloudflare
+1. Go to the [Cloudflare dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create**.
+2. Choose **Import a repository** (this is the current unified flow — it replaces the old separate "Pages" button).
+3. Authorize GitHub if asked, then pick this repo.
+4. Build settings: leave **Build command** empty (no build step needed) — Cloudflare will detect `wrangler.toml` and use `npx wrangler deploy` as the **Deploy command** automatically, which now matches this project's structure.
+5. Click **Save and Deploy**.
+
+### 3. Set the HubSpot secrets
+1. Open the project → **Settings → Variables and Secrets**.
+2. Add, for both **Production** and **Preview**:
+   - `HUBSPOT_PORTAL_ID` — type **Secret**
+   - `HUBSPOT_FORM_GUID` — type **Secret**
+3. Save, then trigger a redeploy (push a commit, or use **Retry deployment**) so the Worker picks up the new variables.
+
+While these are unset, the form still works in **demo mode** — it accepts submissions but doesn't send them anywhere, which is safe for testing.
+
+### 4. Verify it's live
+1. Project → **Deployments** tab → the newest entry should say **Success**.
+2. Click it (or the **Visit** button) — you'll get a URL like `https://ceaselessintelligence.<your-subdomain>.workers.dev`.
+3. Open it and check the page loads, and that submitting the lead form shows a success message.
+
+### 5. Connect your custom domain
+This branches depending on where your domain currently lives:
+
+**If your domain's DNS is already on Cloudflare** (you added it under **Websites** and it shows "Active"):
+1. Project → **Settings → Domains & Routes** → **Add** → **Custom domain**.
+2. Type your domain (e.g. `ceaselessintelligence.com`) → **Add domain**.
+3. Cloudflare provisions SSL automatically — usually ready within a few minutes.
+
+**If your domain is still registered/managed elsewhere** (GoDaddy, Niagahoster, Namecheap, etc.):
+1. In Cloudflare dashboard → **Websites** → **Add a domain**, enter your domain, pick a plan (Free is fine).
+2. Cloudflare gives you two nameservers (e.g. `xxx.ns.cloudflare.com`).
+3. Go to wherever you registered the domain → find **Nameservers** / **DNS management** → replace the existing nameservers with the two Cloudflare gave you.
+4. Wait for propagation (often under an hour, can take up to 24h) — Cloudflare emails you once it's active.
+5. Once the domain shows **Active** in Cloudflare, repeat the steps above: project → **Settings → Domains & Routes** → **Add custom domain**.
+
+After that, your domain points straight at this Worker with automatic SSL, and every future `git push` to `main` redeploys it.
 
 ### Migrating later
-Because there's no build step and no framework lock-in, moving off Cloudflare
-is low-effort: the static files work unchanged on Netlify, Vercel, or any
-plain web server. Only `functions/api/submit-lead.js` is Cloudflare-Pages-specific
-(its `onRequestPost(context)` signature) — moving to Vercel/Netlify means
-porting that one file to their respective serverless-function format; moving
-to a VPS means running it behind a tiny Node/Express (or any language) route
-instead. Everything else — HTML, CSS, `js/main.js` — copies over as-is.
+Because `src/index.js` is a plain Worker (standard `fetch(request, env)` handler,
+no framework), moving off Cloudflare later is straightforward: the static
+files work unchanged anywhere, and `src/index.js` ports easily to any
+Node-compatible runtime (Vercel Edge Functions, a small Express route on a
+VPS, etc.) — it's ~140 lines with no Cloudflare-specific APIs beyond the
+`env.ASSETS.fetch()` call, which would be replaced by whatever static-file
+serving the new host provides.
 
 ## Before go-live — fill in the following placeholders
 
 ### 1. HubSpot CRM (lead form)
-Set `HUBSPOT_PORTAL_ID` and `HUBSPOT_FORM_GUID` as environment variables (see
-deployment steps above) — not in any file in this repo. While unset, the form
-shows a success message in "demo mode" without sending data anywhere, so it's
-safe to test/demo before HubSpot is wired up.
+Set `HUBSPOT_PORTAL_ID` and `HUBSPOT_FORM_GUID` as environment variables (see deployment steps above) — not in any file in this repo. While unset, the form shows a success message in "demo mode" without sending data anywhere.
 
 ### 2. Google Analytics 4
 In `js/main.js`, replace `CONFIG.GA4_ID` with the real Measurement ID.
@@ -107,11 +135,14 @@ The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder &
 - No secrets live in client-side code. The only values shipped to the
   browser are public by design (GA4 Measurement ID, WhatsApp number, email —
   all meant to be visible).
-- `_headers` sets a Content-Security-Policy, `X-Frame-Options: DENY`,
-  `X-Content-Type-Options: nosniff`, and a restrictive `Permissions-Policy`.
+- `src/index.js` sets a Content-Security-Policy, `X-Frame-Options: DENY`,
+  `X-Content-Type-Options: nosniff`, and a restrictive `Permissions-Policy`
+  on every response.
+- `.assetsignore` prevents `wrangler.toml`, `package.json`, and other repo
+  files from being publicly downloadable from the live site.
 - The lead form has honeypot spam protection checked **both** client-side
-  (fast path) and server-side in `functions/api/submit-lead.js` (so it can't
-  be bypassed by calling the API directly).
+  (fast path) and server-side in `src/index.js` (so it can't be bypassed by
+  calling the API directly).
 - For stronger anti-spam beyond the honeypot, consider adding Cloudflare
   Turnstile (free CAPTCHA alternative) to the form, or a Cloudflare Rate
   Limiting rule on `/api/submit-lead` — neither is wired up yet.
@@ -130,9 +161,10 @@ The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder &
 - [x] All CTA buttons functional (scroll to section / WhatsApp / form)
 - [x] Mobile layout tested (390px–1440px)
 - [x] Privacy policy & terms of service published (draft)
-- [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID (set as Cloudflare Pages secrets)
+- [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID (set as Cloudflare secrets)
 - [ ] Google Calendar booking active — needs real embed link
 - [ ] Analytics events verified in GA4 — needs real Measurement ID
 - [ ] CEO photo installed — placeholder avatar in place for now
 - [ ] Images have legal usage rights — no real photos installed yet
+- [ ] Custom domain connected in Cloudflare
 - [ ] Founder & CTO have approved all claims on this page
