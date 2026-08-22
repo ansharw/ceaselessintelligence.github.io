@@ -910,6 +910,7 @@ p { margin: 0; color: var(--text-muted); }
     opacity: 0;
     visibility: hidden;
     transition: opacity .22s var(--ease), visibility .22s;
+    z-index: 99;
   }
   .nav__backdrop.is-open { opacity: 1; visibility: visible; }
   .nav__links { flex-direction: column; align-items: stretch; gap: 4px; }
