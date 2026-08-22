@@ -85,18 +85,27 @@
   function initMobileNav() {
     var toggle = document.getElementById("navToggle");
     var menu = document.getElementById("navMenu");
+    var backdrop = document.getElementById("navBackdrop");
     if (!toggle || !menu) return;
+
+    function closeMenu() {
+      menu.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      if (backdrop) backdrop.classList.remove("is-open");
+    }
 
     toggle.addEventListener("click", function () {
       var isOpen = menu.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(isOpen));
+      if (backdrop) backdrop.classList.toggle("is-open", isOpen);
     });
 
+    if (backdrop) {
+      backdrop.addEventListener("click", closeMenu);
+    }
+
     menu.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        menu.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      });
+      link.addEventListener("click", closeMenu);
     });
   }
 
