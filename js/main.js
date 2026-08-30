@@ -200,7 +200,10 @@
      Subtle animated point network for the hero and the mid-page
      "systems problem" interruption. Deliberately quiet — slow
      drift, thin lines, low opacity — not a particle-effect gimmick.
-     No-op on reduced-motion or if canvas isn't supported.
+     Reacts to the cursor: nearby points draw a line to it, and the
+     whole network eases into a light parallax offset. Both effects
+     settle back to neutral when the pointer leaves. No-op on
+     reduced-motion, touch-only devices, or if canvas isn't supported.
      ============================================================ */
   function initNetworkCanvas(id, opts) {
     var canvas = document.getElementById(id);
@@ -211,6 +214,9 @@
     var points = [];
     var width, height, dpr;
     var rafId;
+    var mouse = { x: null, y: null };
+    var parallax = { x: 0, y: 0 };
+    var interactRadius = opts.maxDist * 1.4;
 
     function resize() {
       var rect = canvas.parentElement.getBoundingClientRect();
@@ -235,8 +241,29 @@
       }
     }
 
+    function onPointerMove(e) {
+      var rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    }
+    function onPointerLeave() {
+      mouse.x = null;
+      mouse.y = null;
+    }
+    canvas.parentElement.addEventListener("mousemove", onPointerMove, { passive: true });
+    canvas.parentElement.addEventListener("mouseleave", onPointerLeave, { passive: true });
+
     function tick() {
+      // Ease the whole network toward a light offset derived from
+      // cursor position (drifts back to center once it leaves).
+      var targetX = mouse.x !== null ? (mouse.x / width - 0.5) * -18 : 0;
+      var targetY = mouse.y !== null ? (mouse.y / height - 0.5) * -18 : 0;
+      parallax.x += (targetX - parallax.x) * 0.06;
+      parallax.y += (targetY - parallax.y) * 0.06;
+
       ctx.clearRect(0, 0, width, height);
+      ctx.save();
+      ctx.translate(parallax.x, parallax.y);
 
       points.forEach(function (p) {
         p.x += p.vx;
@@ -259,12 +286,35 @@
             ctx.stroke();
           }
         }
+
+        if (mouse.x !== null) {
+          var mdx = points[i].x - mouse.x;
+          var mdy = points[i].y - mouse.y;
+          var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mdist < interactRadius) {
+            ctx.strokeStyle = "rgba(197,199,201," + (1 - mdist / interactRadius) * 0.55 + ")";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+
         ctx.fillStyle = "rgba(197,199,201,0.5)";
         ctx.beginPath();
         ctx.arc(points[i].x, points[i].y, 1.4, 0, Math.PI * 2);
         ctx.fill();
       }
 
+      if (mouse.x !== null) {
+        ctx.fillStyle = "rgba(197,199,201,0.85)";
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
       rafId = requestAnimationFrame(tick);
     }
 
