@@ -81,6 +81,34 @@ p { margin: 0; color: var(--text-muted); }
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
+/* Staggered reveal — grids/lists whose children cascade in one after
+   another instead of fading in as a single flat block. */
+.capability-grid.reveal, .industry-grid.reveal, .criteria-list.reveal {
+  opacity: 1; transform: none; transition: none;
+}
+.capability-grid > .capability-card,
+.industry-grid > .industry-cell,
+.criteria-list > .criteria-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.capability-grid.is-visible > .capability-card,
+.industry-grid.is-visible > .industry-cell,
+.criteria-list.is-visible > .criteria-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+.capability-grid.is-visible > .capability-card:nth-child(2) { transition-delay: .1s; }
+.capability-grid.is-visible > .capability-card:nth-child(3) { transition-delay: .2s; }
+.industry-grid.is-visible > .industry-cell:nth-child(4n+1) { transition-delay: 0s; }
+.industry-grid.is-visible > .industry-cell:nth-child(4n+2) { transition-delay: .06s; }
+.industry-grid.is-visible > .industry-cell:nth-child(4n+3) { transition-delay: .12s; }
+.industry-grid.is-visible > .industry-cell:nth-child(4n) { transition-delay: .18s; }
+.criteria-list.is-visible > .criteria-item:nth-child(2) { transition-delay: .08s; }
+.criteria-list.is-visible > .criteria-item:nth-child(3) { transition-delay: .16s; }
+.criteria-list.is-visible > .criteria-item:nth-child(4) { transition-delay: .24s; }
+
 /* ==========================================================================
    Buttons
    ========================================================================== */
@@ -346,10 +374,16 @@ p { margin: 0; color: var(--text-muted); }
   padding: 44px 36px;
   display: flex;
   flex-direction: column;
-  transition: background .25s var(--ease), border-color .25s var(--ease);
+  position: relative;
+  transition: background .25s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
 }
 .section--alt .capability-card { background: var(--bg-alt); }
-.capability-card:hover { background: var(--bg-alt-2); }
+.capability-card:hover {
+  background: var(--bg-alt-2);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px -24px rgba(0,0,0,0.6);
+  z-index: 1;
+}
 .capability-card__tag {
   font-size: 0.72rem;
   font-weight: 600;

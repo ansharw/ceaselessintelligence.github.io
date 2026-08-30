@@ -63,7 +63,28 @@
     initScrollReveal();
     initNetworkCanvas("heroCanvas", { density: 0.00009, maxDist: 140, speed: 0.12 });
     initNetworkCanvas("interruptionCanvas", { density: 0.00006, maxDist: 160, speed: 0.08 });
+    initHeroParallax();
   });
+
+  /* ============================================================
+     Hero scroll parallax — the network canvas drifts down slightly
+     slower than the page scrolls, for a light sense of depth. Only
+     computed while the hero is actually on screen.
+     ============================================================ */
+  function initHeroParallax() {
+    var hero = document.querySelector(".hero");
+    var canvas = document.getElementById("heroCanvas");
+    if (!hero || !canvas) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    function onScroll() {
+      var rect = hero.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      canvas.style.transform = "translateY(" + window.scrollY * 0.12 + "px)";
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
 
   /* ============================================================
      Header background — transparent over the hero, blurred glass
