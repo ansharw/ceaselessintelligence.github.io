@@ -559,18 +559,28 @@ p { margin: 0; color: var(--text-muted); }
 .partnership__body p { font-size: 1.05rem; margin-bottom: 20px; }
 .partnership-stack {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 40px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 48px;
 }
-.partnership-stack span {
-  font-size: 1.3rem;
+.partnership-stack__item {
+  padding: 16px 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  font-size: 1.1rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
   color: var(--text);
+  transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
 }
-.partnership-stack .plus { font-size: 1rem; color: var(--text-faint); font-weight: 400; }
+.section--alt .partnership-stack__item { background: var(--bg-alt-2); }
+.partnership-stack__item:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+.partnership-stack .plus { font-size: 1.2rem; color: var(--text-faint); font-weight: 300; }
 .partnership__mandate { font-size: 1.15rem; color: var(--text); font-weight: 500; }
 .partnership__mandate strong { color: var(--silver); }
 
