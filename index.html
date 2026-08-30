@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ceaseless Intelligence | B2B Lead Generation & AI Solutions</title>
-<meta name="description" content="Ceaseless Intelligence helps B2B companies generate qualified business opportunities and automate business processes using AI, automation, and intelligent systems.">
-<meta name="keywords" content="B2B lead generation, AI solutions for B2B, business automation, B2B growth systems, sales pipeline automation, AI agents for business, CRM automation, intelligent business systems">
+<title>Ceaseless Intelligence — Growth Infrastructure</title>
+<meta name="description" content="Ceaseless Intelligence builds customer acquisition, AI automation, and revenue systems for businesses with something worth scaling.">
+<meta name="keywords" content="growth infrastructure, customer acquisition systems, AI automation for business, revenue infrastructure, B2B growth partner, AI agents, sales automation">
 
 <!-- Open Graph -->
-<meta property="og:title" content="Ceaseless Intelligence | B2B Lead Generation & AI Solutions">
-<meta property="og:description" content="Ceaseless Intelligence helps B2B companies generate qualified business opportunities and automate business processes using AI.">
+<meta property="og:title" content="Ceaseless Intelligence — Growth Infrastructure">
+<meta property="og:description" content="We engineer growth. Customer acquisition, AI automation, and revenue infrastructure for businesses with something worth scaling.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230A0E17%22/><path d=%22M30 50 L45 65 L72 35%22 stroke=%22%234F8CFF%22 stroke-width=%229%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%23080808%22/><path d=%22M30 50 L45 65 L72 35%22 stroke=%22%23C5C7C9%22 stroke-width=%229%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
 
 <link rel="stylesheet" href="css/style.css">
 
@@ -36,23 +36,8 @@
      NAVIGATION
      ============================================================ -->
 <header class="site-header" id="site-header">
-  <nav class="nav container" aria-label="Main navigation">
-    <a href="#top" class="nav__logo" data-track="nav_logo_click">
-      <span class="nav__logo-mark" aria-hidden="true">
-        <svg viewBox="0 0 100 100" width="26" height="26">
-          <defs>
-            <linearGradient id="markGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#E4E9F0"/>
-              <stop offset="45%" stop-color="#9AA5B8"/>
-              <stop offset="100%" stop-color="#4B5563"/>
-            </linearGradient>
-          </defs>
-          <path d="M8 52 L58 20 L92 6 L54 42 Z" fill="url(#markGradNav)"/>
-          <path d="M8 52 L58 84 L92 98 L54 62 Z" fill="url(#markGradNav)"/>
-        </svg>
-      </span>
-      <span class="nav__logo-text">Ceaseless <strong>Intelligence</strong></span>
-    </a>
+  <div class="container nav">
+    <a href="#top" class="nav__logo" data-track="nav_logo_click">Ceaseless <strong>Intelligence</strong></a>
 
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open navigation menu">
       <span></span><span></span><span></span>
@@ -60,16 +45,14 @@
 
     <div class="nav__menu" id="navMenu">
       <ul class="nav__links">
-        <li><a href="#top" data-track="nav_link_click">Home</a></li>
-        <li><a href="#services" data-track="nav_link_click">Services</a></li>
-        <li><a href="#how-we-work" data-track="nav_link_click">How We Work</a></li>
-        <li><a href="#why-ceaseless" data-track="nav_link_click">Why Ceaseless</a></li>
-        <li><a href="#about" data-track="nav_link_click">About</a></li>
+        <li><a href="#capabilities" data-track="nav_link_click">Capabilities</a></li>
+        <li><a href="#approach" data-track="nav_link_click">Approach</a></li>
+        <li><a href="#company" data-track="nav_link_click">Company</a></li>
         <li><a href="#contact" data-track="nav_link_click">Contact</a></li>
       </ul>
-      <a href="#contact" class="btn btn--primary btn--sm nav__cta" data-track="nav_cta_click">Book a Strategy Call</a>
+      <a href="#contact" class="btn btn--outline btn--sm" data-track="nav_cta_click">Start a Conversation &rarr;</a>
     </div>
-  </nav>
+  </div>
 </header>
 
 <div class="nav__backdrop" id="navBackdrop" aria-hidden="true"></div>
@@ -80,424 +63,319 @@
      HERO
      ============================================================ -->
 <section class="hero" id="top">
-  <div class="hero__bg" aria-hidden="true">
-    <div class="hero__grid"></div>
-    <div class="hero__glow hero__glow--a"></div>
-    <div class="hero__glow hero__glow--b"></div>
-  </div>
-
+  <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
   <div class="container hero__inner">
-    <div class="hero__content">
-      <h1 class="hero__headline">
-        Turn Intelligence <span class="text-accent">Into Growth.</span>
-      </h1>
-      <p class="hero__lead">
-        Ceaseless Intelligence helps B2B companies generate qualified business opportunities and automate business processes using AI.
-      </p>
-      <p class="hero__lead">
-        We build growth and intelligent systems designed to create more opportunities, reduce operational friction, improve execution, and support scale.
-      </p>
+    <p class="hero__eyebrow">Ceaseless Intelligence <span>&mdash; Growth Infrastructure</span></p>
+    <h1 class="hero__headline">We Engineer Growth.</h1>
+    <p class="hero__lead">
+      Ceaseless Intelligence builds customer acquisition, AI automation, and revenue systems for businesses with something worth scaling.
+    </p>
+    <p class="hero__triad">
+      <strong>We identify the constraint.</strong> We build the infrastructure. We compound what works.
+    </p>
 
-      <div class="hero__actions">
-        <a href="#contact" class="btn btn--primary btn--lg" data-track="hero_cta_click" data-event="hero_cta_click">Book a Strategy Call</a>
-        <a href="#services" class="btn btn--ghost btn--lg" data-track="hero_secondary_click">Explore Our Services</a>
-      </div>
-      <p class="hero__microcopy">B2B Lead Generation &bull; AI Solutions &bull; Business Automation</p>
+    <div class="hero__actions">
+      <a href="#contact" class="btn btn--primary btn--lg" data-track="hero_cta_click" data-event="hero_cta_click">Build With Us</a>
+      <a href="https://calendar.app.google/aFwcVLPRavb4UoDB8" target="_blank" rel="noopener" class="btn btn--outline btn--lg" data-track="calendar_click" data-event="calendar_click">Book a Strategy Call</a>
     </div>
 
-    <div class="hero__visual" aria-hidden="true">
-      <div class="visual-card">
-        <div class="visual-card__row">
-          <span class="visual-dot"></span>
-          <span class="visual-card__label">Active Pipeline</span>
-        </div>
-        <div class="visual-bars">
-          <div class="visual-bar" style="--h:38%"></div>
-          <div class="visual-bar" style="--h:62%"></div>
-          <div class="visual-bar" style="--h:47%"></div>
-          <div class="visual-bar" style="--h:81%"></div>
-          <div class="visual-bar" style="--h:58%"></div>
-          <div class="visual-bar" style="--h:93%"></div>
-        </div>
-        <div class="visual-card__stages">
-          <span>Inquiry</span><span>Qualified</span><span>Proposal</span><span>Won</span>
-        </div>
-      </div>
-      <div class="visual-node visual-node--1">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 12h16M4 6h10M4 18h7" stroke="#4F8CFF" stroke-width="2" stroke-linecap="round"/></svg>
-        <span>Follow-Up Automation</span>
-      </div>
-      <div class="visual-node visual-node--2">
-        <svg viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#4F8CFF" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#4F8CFF" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#4F8CFF" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#4F8CFF" stroke-width="2"/></svg>
-        <span>CRM Sync</span>
-      </div>
+    <hr class="hero__divider">
+    <div class="hero__descriptors">
+      <span>Customer Acquisition</span>
+      <span>Artificial Intelligence</span>
+      <span>Growth Infrastructure</span>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     GROWTH & INTELLIGENT SYSTEMS FOR B2B
+     01 — POSITIONING
      ============================================================ -->
-<section class="section" id="overview">
+<section class="section section--alt" id="positioning">
   <div class="container">
-    <div class="section__head">
-      <p class="eyebrow">Overview</p>
-      <h2>Growth &amp; Intelligent Systems for B2B</h2>
-      <p class="section__lead">
-        Businesses grow through more than one isolated activity. Customer acquisition creates opportunity. Strong systems help businesses act on that opportunity.
-      </p>
-      <p class="section__lead">
-        Ceaseless Intelligence works across both. We combine B2B lead generation, business intelligence, AI, and automation around practical business outcomes.
-      </p>
+    <p class="tag reveal">01 / Positioning</p>
+    <div class="positioning__statement reveal">
+      <h2>We Don't Niche by Industry.</h2>
+      <h2>We Niche by Expensive Problems.</h2>
     </div>
-  </div>
-</section>
 
-<!-- ============================================================
-     B2B LEAD GENERATION
-     ============================================================ -->
-<section class="section section--alt" id="services">
-  <div class="container detail-split">
-    <div class="detail-split__text">
-      <p class="eyebrow">B2B Lead Generation</p>
-      <h2>Create Qualified Business Opportunities.</h2>
-      <p>We help businesses identify, reach, and engage companies that are relevant to what they sell.</p>
-      <p class="service-card__label">Our work can include</p>
-      <ul class="feature-list">
-        <li>
-          <strong>Ideal Customer Profiling</strong>
-          <p>Define the companies most likely to become valuable customers.</p>
-        </li>
-        <li>
-          <strong>Target Account Research</strong>
-          <p>Identify relevant companies, markets, and commercial opportunities.</p>
-        </li>
-        <li>
-          <strong>Decision-Maker Identification</strong>
-          <p>Find the people responsible for purchasing and business decisions.</p>
-        </li>
-        <li>
-          <strong>Prospecting &amp; Outreach</strong>
-          <p>Build targeted outbound campaigns around the client's market and offer.</p>
-        </li>
-        <li>
-          <strong>Lead Qualification</strong>
-          <p>Separate genuine commercial opportunities from irrelevant interest.</p>
-        </li>
-        <li>
-          <strong>Opportunity Generation</strong>
-          <p>Create qualified conversations, appointments, and sales opportunities.</p>
-        </li>
-        <li>
-          <strong>Pipeline Development</strong>
-          <p>Build a structured process for tracking opportunities through the sales journey.</p>
-        </li>
+    <div class="positioning__body reveal">
+      <p>Most agencies define themselves by the industries they serve. We define ourselves by the problems we solve.</p>
+
+      <ul class="problem-list">
+        <li>Insufficient pipeline.</li>
+        <li>Inconsistent customer acquisition.</li>
+        <li>Manual operations.</li>
+        <li>Weak follow-up.</li>
+        <li>Revenue leakage.</li>
+        <li>Fragmented systems.</li>
+        <li>Growth that depends too heavily on people doing repetitive work.</li>
       </ul>
-      <p class="truth-note">The objective is not more contacts. The objective is more qualified business opportunities.</p>
-      <a href="#contact" class="btn btn--primary" data-track="service_leadgen_cta">Build My Pipeline</a>
+
+      <p>Ceaseless Intelligence exists to remove those constraints. Our clients may operate in entirely different industries. The underlying mandate remains the same:</p>
     </div>
-    <aside class="detail-split__card">
-      <p class="flow-diagram__label">Lead Generation Flow</p>
-      <div class="flow-diagram" aria-hidden="true">
-        <div class="flow-step"><span class="flow-step__num">1</span><span class="flow-step__label">Ideal Customer</span></div>
-        <div class="flow-step"><span class="flow-step__num">2</span><span class="flow-step__label">Target Accounts</span></div>
-        <div class="flow-step"><span class="flow-step__num">3</span><span class="flow-step__label">Outreach</span></div>
-        <div class="flow-step"><span class="flow-step__num">4</span><span class="flow-step__label">Qualified Opportunity</span></div>
-      </div>
-    </aside>
+    <p class="positioning__closing reveal">Find the highest-leverage constraint to growth &mdash; and engineer the system that removes it.</p>
   </div>
 </section>
 
 <!-- ============================================================
-     AI SOLUTIONS & AUTOMATION
+     02 — CAPABILITIES
      ============================================================ -->
-<section class="section">
-  <div class="container detail-split detail-split--reverse">
-    <div class="detail-split__text">
-      <p class="eyebrow">AI Solutions &amp; Automation</p>
-      <h2>Build Better Business Systems.</h2>
-      <p>We study how work moves through a business and identify repetitive, fragmented, slow, or information-heavy processes that can be improved through AI and automation.</p>
-      <p class="service-card__label">Solutions can include</p>
-      <ul class="feature-list">
-        <li>
-          <strong>AI Assistants &amp; Agents</strong>
-          <p>AI systems designed around specific customer or employee workflows.</p>
-        </li>
-        <li>
-          <strong>Lead Response Automation</strong>
-          <p>Capture, organize, qualify, route, and respond to incoming opportunities.</p>
-        </li>
-        <li>
-          <strong>CRM Automation</strong>
-          <p>Reduce repetitive data entry, updates, reminders, and administrative work.</p>
-        </li>
-        <li>
-          <strong>Sales Follow-Up Systems</strong>
-          <p>Help prevent valuable opportunities from disappearing because follow-up was missed.</p>
-        </li>
-        <li>
-          <strong>Customer Communication Workflows</strong>
-          <p>Improve how inquiries, requests, updates, and responses move through the business.</p>
-        </li>
-        <li>
-          <strong>Data Extraction &amp; Processing</strong>
-          <p>Turn information from emails, documents, forms, spreadsheets, and other sources into structured business data.</p>
-        </li>
-        <li>
-          <strong>Internal Knowledge Systems</strong>
-          <p>Make company knowledge easier for employees to access and use.</p>
-        </li>
-        <li>
-          <strong>Reporting &amp; Business Intelligence</strong>
-          <p>Bring important commercial and operational information together for better visibility and decision-making.</p>
-        </li>
-        <li>
-          <strong>Custom Workflow Automation</strong>
-          <p>Connect people, processes, software, and information into more efficient systems.</p>
-        </li>
-      </ul>
-      <p class="truth-note">We do not automate something simply because AI exists. We automate where technology creates business value.</p>
-      <a href="#contact" class="btn btn--outline" data-track="service_ai_cta">Explore AI Solutions</a>
-    </div>
-    <aside class="detail-split__card">
-      <p class="flow-diagram__label">Automation Flow</p>
-      <div class="flow-diagram" aria-hidden="true">
-        <div class="flow-step"><span class="flow-step__num">1</span><span class="flow-step__label">Bottleneck</span></div>
-        <div class="flow-step"><span class="flow-step__num">2</span><span class="flow-step__label">System Design</span></div>
-        <div class="flow-step"><span class="flow-step__num">3</span><span class="flow-step__label">Implementation</span></div>
-        <div class="flow-step"><span class="flow-step__num">4</span><span class="flow-step__label">Optimization</span></div>
-      </div>
-    </aside>
-  </div>
-</section>
-
-<!-- ============================================================
-     WHY CEASELESS INTELLIGENCE
-     ============================================================ -->
-<section class="section section--alt" id="why-ceaseless">
+<section class="section" id="capabilities">
   <div class="container">
-    <div class="section__head">
-      <p class="eyebrow">Why Ceaseless Intelligence</p>
-      <h2>We Don't Just Generate Opportunities. We Improve the System That Turns Opportunities Into Growth.</h2>
-      <p class="section__lead">
-        Lead generation and business operations are connected. Generating more opportunities creates limited value if those opportunities are lost through slow responses, missed follow-ups, fragmented information, repetitive work, or inefficient internal processes. Ceaseless Intelligence works across both sides of that equation.
-      </p>
+    <div class="section__head reveal">
+      <p class="tag">02 / Capabilities</p>
+      <h2>Different tools.</h2>
+      <h2>One mandate.</h2>
+      <p class="section__lead">Move the business forward.</p>
     </div>
 
-    <div class="grid grid--4 why-grid">
-      <article class="why-card">
-        <span class="why-card__index">01</span>
-        <h3>Create Demand</h3>
-        <p>Generate qualified commercial opportunities.</p>
+    <div class="capability-grid reveal">
+      <article class="capability-card">
+        <p class="capability-card__tag">Customer Acquisition</p>
+        <h3>Build the Pipeline.</h3>
+        <p>We design customer acquisition infrastructure engineered to create qualified commercial opportunities consistently.</p>
+        <ul class="capability-card__list">
+          <li>Market Intelligence</li>
+          <li>Lead Generation</li>
+          <li>Outbound Systems</li>
+          <li>Appointment Generation</li>
+          <li>CRM Infrastructure</li>
+          <li>Pipeline Optimization</li>
+        </ul>
+        <a href="#contact" class="capability-card__link" data-track="capability_acquisition_click">Explore Acquisition &rarr;</a>
       </article>
-      <article class="why-card">
-        <span class="why-card__index">02</span>
-        <h3>Convert Demand</h3>
-        <p>Improve how leads, information, and opportunities move through the business.</p>
+
+      <article class="capability-card">
+        <p class="capability-card__tag">Artificial Intelligence</p>
+        <h3>Make Intelligence Operational.</h3>
+        <p>We deploy AI where it materially increases speed, capacity, responsiveness, or economic efficiency.</p>
+        <ul class="capability-card__list">
+          <li>AI Voice Agents</li>
+          <li>Sales Automation</li>
+          <li>Lead Qualification</li>
+          <li>Workflow Automation</li>
+          <li>Customer Communication</li>
+          <li>Custom AI Systems</li>
+        </ul>
+        <a href="#contact" class="capability-card__link" data-track="capability_ai_click">Explore AI &rarr;</a>
       </article>
-      <article class="why-card">
-        <span class="why-card__index">03</span>
-        <h3>Automate Friction</h3>
-        <p>Use AI and automation where repetitive work slows execution.</p>
-      </article>
-      <article class="why-card">
-        <span class="why-card__index">04</span>
-        <h3>Build Intelligence</h3>
-        <p>Make business information easier to access, understand, and act on.</p>
+
+      <article class="capability-card">
+        <p class="capability-card__tag">Growth Infrastructure</p>
+        <h3>Strengthen the Engine.</h3>
+        <p>We connect acquisition, conversion, automation, technology, and execution into coherent growth infrastructure.</p>
+        <ul class="capability-card__list">
+          <li>Growth Architecture</li>
+          <li>Revenue Systems</li>
+          <li>Conversion Optimization</li>
+          <li>Retention Infrastructure</li>
+          <li>Strategic Experimentation</li>
+          <li>Operational Automation</li>
+        </ul>
+        <a href="#contact" class="capability-card__link" data-track="capability_growth_click">Explore Growth &rarr;</a>
       </article>
     </div>
-
-    <p class="closing-statement">One partner. <span class="text-accent">From opportunity creation to intelligent execution.</span></p>
   </div>
 </section>
 
 <!-- ============================================================
-     BUSINESS FIRST. TECHNOLOGY SECOND.
-     ============================================================ -->
-<section class="section">
-  <div class="container">
-    <div class="section__head">
-      <p class="eyebrow">Our Approach</p>
-      <h2>Business First. Technology Second.</h2>
-      <p class="section__lead">We start by understanding the business.</p>
-    </div>
-
-    <ul class="problem-grid">
-      <li>How does it acquire customers?</li>
-      <li>How does it make money?</li>
-      <li>How does work move from one person or system to another?</li>
-      <li>Where does execution slow down?</li>
-      <li>Where are opportunities being lost?</li>
-    </ul>
-
-    <p class="closing-line">Only then do we determine whether the right answer is better targeting, stronger outreach, a better workflow, automation, AI, or a combination of them.</p>
-    <p class="closing-statement">The objective is not more technology. <span class="text-accent">The objective is better business performance.</span></p>
-  </div>
-</section>
-
-<!-- ============================================================
-     HOW WE WORK
-     ============================================================ -->
-<section class="section section--alt" id="how-we-work">
-  <div class="container">
-    <div class="section__head">
-      <p class="eyebrow">How We Work</p>
-      <h2>Understand. Identify. Design. Build. Measure. Improve.</h2>
-    </div>
-
-    <ol class="timeline">
-      <li class="timeline__item">
-        <span class="timeline__num">1</span>
-        <div>
-          <h3>Understand</h3>
-          <p>We learn how your business acquires customers, operates, makes money, and delivers value.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <span class="timeline__num">2</span>
-        <div>
-          <h3>Identify</h3>
-          <p>We identify opportunities for stronger customer acquisition, better workflows, and useful automation.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <span class="timeline__num">3</span>
-        <div>
-          <h3>Design</h3>
-          <p>We determine the strategy, processes, systems, and technology appropriate to the opportunity.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <span class="timeline__num">4</span>
-        <div>
-          <h3>Build</h3>
-          <p>We implement the lead generation, AI, or automation system around the business.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <span class="timeline__num">5</span>
-        <div>
-          <h3>Measure</h3>
-          <p>We track the outcomes that actually matter.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <span class="timeline__num">6</span>
-        <div>
-          <h3>Improve</h3>
-          <p>We refine the system based on performance, feedback, and changing business needs.</p>
-        </div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ============================================================
-     BUILT FOR B2B COMPANIES
-     ============================================================ -->
-<section class="section" id="industries">
-  <div class="container">
-    <div class="section__head">
-      <p class="eyebrow">Who We Work With</p>
-      <h2>Built for B2B Companies</h2>
-      <p class="section__lead">Ceaseless Intelligence works with companies that sell products or services to other businesses and want to improve customer acquisition, operational execution, or both. Our approach can adapt across:</p>
-    </div>
-
-    <div class="metric-grid">
-      <span class="metric-pill">Commercial Services</span>
-      <span class="metric-pill">Professional Services</span>
-      <span class="metric-pill">Technology</span>
-      <span class="metric-pill">Manufacturing</span>
-      <span class="metric-pill">Distribution</span>
-      <span class="metric-pill">Construction</span>
-      <span class="metric-pill">Property Services</span>
-      <span class="metric-pill">Recruitment</span>
-      <span class="metric-pill">Logistics</span>
-      <span class="metric-pill">Business Services</span>
-      <span class="metric-pill">Industrial Businesses</span>
-      <span class="metric-pill">Other B2B Markets</span>
-    </div>
-
-    <p class="boundary-note">Different businesses. Different workflows. One objective: better performance.</p>
-  </div>
-</section>
-
-<!-- ============================================================
-     FROM MARKET TO OPPORTUNITY / FROM WORKFLOW TO INTELLIGENT SYSTEM
+     DIFFERENTIATION
      ============================================================ -->
 <section class="section section--alt">
-  <div class="container detail-split">
-    <div>
-      <div class="section__head">
-        <p class="eyebrow">Lead Generation Process</p>
-        <h2>From Market to Opportunity</h2>
-        <p class="section__lead">Our B2B lead generation process can include:</p>
-      </div>
-      <div class="flow-diagram">
-        <div class="flow-step"><span class="flow-step__num">1</span><span class="flow-step__label">Market Research</span></div>
-        <div class="flow-step"><span class="flow-step__num">2</span><span class="flow-step__label">Ideal Customer Profile</span></div>
-        <div class="flow-step"><span class="flow-step__num">3</span><span class="flow-step__label">Target Accounts</span></div>
-        <div class="flow-step"><span class="flow-step__num">4</span><span class="flow-step__label">Decision Makers</span></div>
-        <div class="flow-step"><span class="flow-step__num">5</span><span class="flow-step__label">Prospecting</span></div>
-        <div class="flow-step"><span class="flow-step__num">6</span><span class="flow-step__label">Outreach</span></div>
-        <div class="flow-step"><span class="flow-step__num">7</span><span class="flow-step__label">Qualification</span></div>
-        <div class="flow-step"><span class="flow-step__num">8</span><span class="flow-step__label">Commercial Opportunity</span></div>
-        <div class="flow-step"><span class="flow-step__num">9</span><span class="flow-step__label">Pipeline</span></div>
-      </div>
-    </div>
-
-    <div>
-      <div class="section__head">
-        <p class="eyebrow">Automation Process</p>
-        <h2>From Workflow to Intelligent System</h2>
-        <p class="section__lead">Our AI and automation process can include:</p>
-      </div>
-      <div class="flow-diagram">
-        <div class="flow-step"><span class="flow-step__num">1</span><span class="flow-step__label">Business Process</span></div>
-        <div class="flow-step"><span class="flow-step__num">2</span><span class="flow-step__label">Bottleneck</span></div>
-        <div class="flow-step"><span class="flow-step__num">3</span><span class="flow-step__label">Workflow &amp; Data Analysis</span></div>
-        <div class="flow-step"><span class="flow-step__num">4</span><span class="flow-step__label">Automation Opportunity</span></div>
-        <div class="flow-step"><span class="flow-step__num">5</span><span class="flow-step__label">System Design</span></div>
-        <div class="flow-step"><span class="flow-step__num">6</span><span class="flow-step__label">Implementation</span></div>
-        <div class="flow-step"><span class="flow-step__num">7</span><span class="flow-step__label">Human Oversight Where Needed</span></div>
-        <div class="flow-step"><span class="flow-step__num">8</span><span class="flow-step__label">Measurement</span></div>
-        <div class="flow-step"><span class="flow-step__num">9</span><span class="flow-step__label">Optimization</span></div>
-      </div>
-    </div>
-  </div>
-
   <div class="container">
-    <p class="closing-line" style="margin-top:56px;">Every system is adapted to the client's market, geography, offer, customers, and sales process.</p>
+    <div class="differentiation">
+      <h2 class="differentiation__statement reveal">Industry-Flexible.<br><em>Problem-Specialized.</em></h2>
+      <div class="differentiation__body reveal">
+        <p>We reject the idea that specialization must mean serving only one industry. Our specialization exists one layer deeper.</p>
+        <p>We identify commercially significant growth constraints and deploy the combination of acquisition, AI, automation, and strategy required to solve them.</p>
+        <p class="differentiation__quote">The industry can change.<br>The class of problem does not.</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     ABOUT CEASELESS INTELLIGENCE
+     03 — THE CEASELESS METHOD
      ============================================================ -->
-<section class="section" id="about">
+<section class="section section--tight" id="approach">
   <div class="container">
-    <div class="section__head">
-      <p class="eyebrow">About</p>
-      <h2>About Ceaseless Intelligence</h2>
-      <p class="section__lead">
-        Ceaseless Intelligence is a B2B growth and AI solutions company focused on customer acquisition, business automation, and intelligent systems.
-      </p>
-      <p class="section__lead">
-        We work with businesses to understand how opportunities are created, how information moves, where processes slow down, and where technology can create meaningful improvements. Our approach combines business understanding with modern prospecting, automation, artificial intelligence, and systems thinking.
-      </p>
+    <div class="section__head reveal">
+      <p class="tag">03 / The Ceaseless Method</p>
+      <h2>Diagnose Before Deploying.</h2>
     </div>
 
-    <p class="closing-statement">Intelligence into action. <span class="text-accent">Action into growth.</span></p>
+    <div class="method reveal">
+      <div class="method__step">
+        <span class="method__num">01</span>
+        <h3>Understand</h3>
+        <p>Understand the business, market, economics, customer journey, existing infrastructure, and objectives.</p>
+      </div>
+      <div class="method__step">
+        <span class="method__num">02</span>
+        <h3>Identify</h3>
+        <p>Identify the bottleneck with the greatest influence on growth.</p>
+      </div>
+      <div class="method__step">
+        <span class="method__num">03</span>
+        <h3>Architect</h3>
+        <p>Design the acquisition, AI, automation, or revenue system required to remove it.</p>
+      </div>
+      <div class="method__step">
+        <span class="method__num">04</span>
+        <h3>Deploy</h3>
+        <p>Build and implement the infrastructure.</p>
+      </div>
+      <div class="method__step">
+        <span class="method__num">05</span>
+        <h3>Compound</h3>
+        <p>Measure what works, eliminate friction, and continuously strengthen the system.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="leader-card">
-      <span class="leader-card__photo" aria-hidden="true">
-        <span class="leader-card__photo-inner">
-          <!-- PLACEHOLDER: replace with actual CEO photo (e.g. <img src="assets/ceo.jpg" alt="Syahreza Daffa Rafiali"> in place of this SVG) -->
-          <svg viewBox="0 0 24 24" width="34" height="34"><path d="M12 12a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM4 20a8 8 0 0116 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+<!-- ============================================================
+     VISUAL INTERRUPTION
+     ============================================================ -->
+<section class="interruption">
+  <canvas class="interruption__canvas" id="interruptionCanvas" aria-hidden="true"></canvas>
+  <div class="container interruption__inner reveal">
+    <h2>Growth is a systems problem.</h2>
+    <ul class="interruption__list">
+      <li>More traffic cannot repair a weak offer.</li>
+      <li>More leads cannot repair a broken sales process.</li>
+      <li>More sales cannot repair operational bottlenecks.</li>
+      <li>More employees cannot repair inefficient systems.</li>
+      <li>More AI cannot repair bad strategy.</li>
+    </ul>
+    <p class="interruption__final">The system matters.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     04 — APPLICABILITY
+     ============================================================ -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="tag">04 / Applicability</p>
+      <h2>Built Across Markets.</h2>
+      <p class="section__lead">Our capabilities are designed around commercial problems rather than rigid industry boundaries.</p>
+    </div>
+
+    <div class="industry-grid reveal">
+      <div class="industry-cell">Industrial &amp; Manufacturing</div>
+      <div class="industry-cell">Distribution</div>
+      <div class="industry-cell">Technology</div>
+      <div class="industry-cell">SaaS</div>
+      <div class="industry-cell">Professional Services</div>
+      <div class="industry-cell">Financial Services</div>
+      <div class="industry-cell">Real Estate</div>
+      <div class="industry-cell">Healthcare</div>
+      <div class="industry-cell">Education</div>
+      <div class="industry-cell">Hospitality</div>
+      <div class="industry-cell">E-Commerce</div>
+      <div class="industry-cell">Consumer Businesses</div>
+      <div class="industry-cell">Multi-Location Businesses</div>
+      <div class="industry-cell">High-Ticket Services</div>
+      <div class="industry-cell">Specialized Local Businesses</div>
+      <div class="industry-cell">Emerging Categories</div>
+    </div>
+
+    <p class="applicability__closing reveal">Industry is one variable. Economic potential, growth ambition, and the problem we can solve matter more.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     05 — SELECTIVITY
+     ============================================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="tag">05 / Selectivity</p>
+      <h2>We Are Not for Everyone.</h2>
+    </div>
+
+    <div class="selectivity__body reveal">
+      <p>We work with businesses where there is a credible opportunity to create meaningful commercial value. We do not take on work simply because somebody is willing to pay for it.</p>
+    </div>
+
+    <ol class="criteria-list reveal">
+      <li class="criteria-item"><span class="criteria-item__num">01</span><span class="criteria-item__label">A valuable offer.</span></li>
+      <li class="criteria-item"><span class="criteria-item__num">02</span><span class="criteria-item__label">A real market.</span></li>
+      <li class="criteria-item"><span class="criteria-item__num">03</span><span class="criteria-item__label">Meaningful economic potential.</span></li>
+      <li class="criteria-item"><span class="criteria-item__num">04</span><span class="criteria-item__label">A constraint we can solve.</span></li>
+    </ol>
+
+    <div class="selectivity__body reveal">
+      <p>If the problem sits outside our capabilities, we say so. If the economics do not make sense, we say so. If another solution would serve the company better, we say so &mdash; because the goal is not to maximize the number of clients we have. The goal is to build things that matter.</p>
+    </div>
+    <p class="selectivity__closing reveal">If the opportunity is not there, we would rather say no.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     GROWTH PARTNERSHIP
+     ============================================================ -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="tag">Growth Partnership</p>
+      <h2>Beyond the Vendor Model.</h2>
+    </div>
+
+    <div class="partnership__body reveal">
+      <p>For selected companies, Ceaseless Intelligence operates as a growth partner rather than a conventional service provider. That means we are not limited to completing a predefined list of deliverables.</p>
+      <p>We look at the business. We identify leverage. We determine what should be built. Then we help execute it.</p>
+    </div>
+
+    <div class="partnership-stack reveal">
+      <span>Strategy</span>
+      <span class="plus">+</span>
+      <span>Acquisition</span>
+      <span class="plus">+</span>
+      <span>AI</span>
+      <span class="plus">+</span>
+      <span>Automation</span>
+      <span class="plus">+</span>
+      <span>Execution</span>
+    </div>
+
+    <p class="partnership__mandate reveal">One mandate: <strong>Move the business forward.</strong></p>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMPANY
+     ============================================================ -->
+<section class="section" id="company">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="tag">Company</p>
+      <h2>Intelligence. Infrastructure. Growth.</h2>
+    </div>
+
+    <div class="company__grid">
+      <div class="company__body reveal">
+        <p>Ceaseless Intelligence is a growth infrastructure company. We combine customer acquisition, artificial intelligence, automation, and growth strategy to build systems that help ambitious businesses acquire customers, operate intelligently, and scale.</p>
+
+        <div class="company__principle">
+          <h3>Intelligence Should Create Leverage.</h3>
+          <p>The best businesses do not simply work harder. They build systems that make every unit of effort more valuable.</p>
+          <p>Better information. Better acquisition. Better automation. Better execution. Better decisions. Compounded over time.</p>
+          <p>That is Ceaseless Intelligence.</p>
+        </div>
+      </div>
+
+      <div class="leader-card reveal">
+        <span class="leader-card__photo" aria-hidden="true">
+          <span class="leader-card__photo-inner">
+            <!-- PLACEHOLDER: replace with actual CEO photo (e.g. <img src="assets/ceo.jpg" alt="Syahreza Daffa Rafiali"> in place of this SVG) -->
+            <svg viewBox="0 0 24 24" width="28" height="28"><path d="M12 12a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM4 20a8 8 0 0116 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </span>
         </span>
-      </span>
-      <div class="leader-card__info">
-        <p class="service-card__label" style="margin:0 0 6px;">Leadership</p>
+        <p class="leader-card__tag">Leadership</p>
         <h3>Syahreza Daffa Rafiali</h3>
         <p class="leader-card__role">Founder &amp; CEO</p>
       </div>
@@ -506,48 +384,40 @@
 </section>
 
 <!-- ============================================================
-     BUILD A SMARTER GROWTH SYSTEM (final CTA)
+     FINAL CTA
      ============================================================ -->
-<section class="section section--alt">
-  <div class="container" style="text-align:center; max-width:720px;">
-    <p class="eyebrow" style="justify-content:center;">Get Started</p>
-    <h2>Build a Smarter Growth System.</h2>
-    <p class="section__lead" style="margin:18px auto 0;">
-      Whether you need more qualified business opportunities, stronger internal workflows, or practical AI automation, Ceaseless Intelligence helps identify where the greatest opportunity exists and builds around it.
-    </p>
-    <div class="hero__actions" style="justify-content:center; margin-top:32px;">
-      <a href="#contact" class="btn btn--primary btn--lg" data-track="final_cta_primary">Book a Strategy Call</a>
+<section class="section final-cta">
+  <div class="container">
+    <p class="tag final-cta__tag reveal">Ceaseless Intelligence</p>
+    <h2 class="reveal">Find the Constraint.</h2>
+    <p class="reveal">Every business has something preventing the next stage of growth. Let's find it.</p>
+    <div class="final-cta__actions reveal">
+      <a href="#contact" class="btn btn--primary btn--lg" data-track="final_cta_primary">Start a Conversation &rarr;</a>
+      <a href="#capabilities" class="btn btn--text btn--lg">Capabilities</a>
     </div>
-    <p class="hero__microcopy">Tell us where your business wants to grow and what is currently getting in the way.</p>
   </div>
 </section>
 
 <!-- ============================================================
      CONTACT
      ============================================================ -->
-<section class="section section--cta" id="contact">
-  <div class="container cta-split">
-    <div class="cta-split__text">
-      <p class="eyebrow">Contact</p>
-      <h2>Start the Conversation</h2>
-      <p>Tell us a bit about your business, and we'll help you evaluate where the greatest opportunity is — more qualified pipeline, stronger internal workflows, or practical AI automation.</p>
+<section class="section section--alt" id="contact">
+  <div class="container contact-split">
+    <div class="contact-split__text reveal">
+      <p class="tag">Contact</p>
+      <h2>Start the Conversation.</h2>
+      <p>Tell us where your business wants to grow and what is currently getting in the way. We'll help identify the constraint &mdash; and what should be built to remove it.</p>
 
-      <div class="hero__actions">
-        <a href="https://calendar.app.google/aFwcVLPRavb4UoDB8"
-           target="_blank" rel="noopener" class="btn btn--primary btn--lg" data-track="calendar_click" data-event="calendar_click">
-          Book a Time on Google Calendar
-        </a>
-        <a href="https://wa.me/6281291129561?text=Hello%20Ceaseless%20Intelligence%2C%20I'd%20like%20to%20discuss%20lead%20generation%20%2F%20AI%20solutions%20for%20my%20business."
-           target="_blank" rel="noopener" class="btn btn--ghost btn--lg" data-track="whatsapp_click" data-event="whatsapp_click">
-          Call / Chat on WhatsApp
-        </a>
+      <div class="contact-split__links">
+        <a href="https://calendar.app.google/aFwcVLPRavb4UoDB8" target="_blank" rel="noopener" class="btn btn--outline" data-track="calendar_click" data-event="calendar_click">Book a Strategy Call</a>
+        <a href="https://wa.me/6281291129561?text=Hello%20Ceaseless%20Intelligence%2C%20I'd%20like%20to%20discuss%20a%20growth%20opportunity%20for%20my%20business."
+           target="_blank" rel="noopener" class="btn btn--outline" data-track="whatsapp_click" data-event="whatsapp_click">Call / Chat on WhatsApp</a>
       </div>
-      <p class="hero__microcopy">No commitment &bull; Opens in a new tab</p>
     </div>
 
-    <div class="cta-split__form">
+    <div class="reveal">
       <form id="leadForm" class="lead-form" novalidate>
-        <h3>Start the Conversation</h3>
+        <h3>Start a Conversation</h3>
 
         <div class="form-row">
           <label for="fullName">Name<span aria-hidden="true">*</span></label>
@@ -575,19 +445,17 @@
         </div>
 
         <div class="form-row">
-          <label for="improvementGoal">What would you like to improve?<span aria-hidden="true">*</span></label>
+          <label for="improvementGoal">What's the constraint you're trying to remove?<span aria-hidden="true">*</span></label>
           <textarea id="improvementGoal" name="improvementGoal" rows="2" required></textarea>
         </div>
 
         <div class="form-row">
-          <label>Service</label>
+          <label>Where do you need leverage?</label>
           <div class="checkbox-grid" role="group" aria-label="Service">
-            <label class="checkbox-option"><input type="checkbox" name="services" value="B2B Lead Generation"> B2B Lead Generation</label>
-            <label class="checkbox-option"><input type="checkbox" name="services" value="AI Solutions"> AI Solutions</label>
-            <label class="checkbox-option"><input type="checkbox" name="services" value="Business Automation"> Business Automation</label>
             <label class="checkbox-option"><input type="checkbox" name="services" value="Customer Acquisition"> Customer Acquisition</label>
-            <label class="checkbox-option"><input type="checkbox" name="services" value="CRM &amp; Follow-Up"> CRM &amp; Follow-Up</label>
-            <label class="checkbox-option"><input type="checkbox" name="services" value="Internal Workflow"> Internal Workflow</label>
+            <label class="checkbox-option"><input type="checkbox" name="services" value="Artificial Intelligence"> Artificial Intelligence</label>
+            <label class="checkbox-option"><input type="checkbox" name="services" value="Growth Infrastructure"> Growth Infrastructure</label>
+            <label class="checkbox-option"><input type="checkbox" name="services" value="Growth Partnership"> Growth Partnership</label>
             <label class="checkbox-option"><input type="checkbox" name="services" value="Other"> Other</label>
           </div>
         </div>
@@ -617,59 +485,33 @@
      FOOTER
      ============================================================ -->
 <footer class="site-footer">
-  <div class="container footer-grid">
-    <div class="footer-brand">
-      <a href="#top" class="nav__logo">
-        <span class="nav__logo-mark" aria-hidden="true">
-          <svg viewBox="0 0 100 100" width="24" height="24">
-            <defs>
-              <linearGradient id="markGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#E4E9F0"/>
-                <stop offset="45%" stop-color="#9AA5B8"/>
-                <stop offset="100%" stop-color="#4B5563"/>
-              </linearGradient>
-            </defs>
-            <path d="M8 52 L58 20 L92 6 L54 42 Z" fill="url(#markGradFooter)"/>
-            <path d="M8 52 L58 84 L92 98 L54 62 Z" fill="url(#markGradFooter)"/>
-          </svg>
-        </span>
-        <span class="nav__logo-text">Ceaseless <strong>Intelligence</strong></span>
-      </a>
-      <p>B2B Lead Generation &bull; AI Solutions &bull; Business Automation<br>Turn Intelligence Into Growth.</p>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand__name">Ceaseless Intelligence</p>
+        <p class="footer-brand__tagline">Intelligence. Infrastructure. Growth.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#capabilities">Capabilities</a>
+        <a href="#approach">Approach</a>
+        <a href="#company">Company</a>
+        <a href="#contact">Contact</a>
+      </nav>
     </div>
-
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <h4>Navigation</h4>
-      <ul>
-        <li><a href="#top">Home</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#how-we-work">How We Work</a></li>
-        <li><a href="#why-ceaseless">Why Ceaseless</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-        <li><a href="terms-of-service.html">Terms of Service</a></li>
-      </ul>
-    </nav>
-
-    <div class="footer-contact">
-      <h4>Contact</h4>
-      <ul>
-        <li><a href="mailto:ceaselessintelligence@gmail.com">ceaselessintelligence@gmail.com</a></li>
-        <li><a href="https://wa.me/6281291129561" target="_blank" rel="noopener">WhatsApp: +62 812-9112-9561</a></li>
-      </ul>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Ceaseless Intelligence. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-of-service.html">Terms</a>
+      </div>
     </div>
-  </div>
-
-  <div class="container footer-bottom">
-    <p>&copy; 2026 Ceaseless Intelligence. All rights reserved.</p>
   </div>
 </footer>
 
 <!-- WhatsApp floating click-to-chat button -->
-<a href="https://wa.me/6281291129561?text=Hello%20Ceaseless%20Intelligence%2C%20I'd%20like%20to%20discuss%20lead%20generation%20%2F%20AI%20solutions%20for%20my%20business."
+<a href="https://wa.me/6281291129561?text=Hello%20Ceaseless%20Intelligence%2C%20I'd%20like%20to%20discuss%20a%20growth%20opportunity%20for%20my%20business."
    class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat via WhatsApp" data-track="whatsapp_float_click" data-event="whatsapp_click">
-  <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor"><path d="M16.004 2.667c-7.36 0-13.333 5.973-13.333 13.334 0 2.352.615 4.66 1.782 6.687L2.667 29.333l6.822-1.79a13.27 13.27 0 006.515 1.71h.006c7.36 0 13.333-5.974 13.333-13.334 0-3.562-1.387-6.912-3.905-9.428a13.24 13.24 0 00-9.434-3.924zm0 24.4h-.005a11.05 11.05 0 01-5.633-1.542l-.404-.24-4.05 1.062 1.082-3.949-.264-.406a11.03 11.03 0 01-1.69-5.892c0-6.106 4.968-11.073 11.077-11.073 2.958 0 5.738 1.153 7.83 3.246a10.995 10.995 0 013.24 7.836c0 6.106-4.968 11.06-11.183 11.06zm6.076-8.287c-.333-.167-1.966-.97-2.27-1.08-.305-.111-.527-.167-.75.167-.222.333-.86 1.08-1.055 1.303-.194.222-.388.25-.72.083-.334-.167-1.409-.52-2.684-1.657-.992-.885-1.663-1.978-1.858-2.312-.194-.333-.02-.514.146-.68.15-.15.334-.389.5-.583.167-.195.222-.333.334-.556.111-.222.055-.417-.028-.583-.083-.167-.75-1.807-1.028-2.474-.271-.65-.546-.562-.75-.573l-.639-.011c-.222 0-.583.083-.888.417-.306.333-1.167 1.14-1.167 2.78 0 1.64 1.194 3.224 1.361 3.446.167.222 2.352 3.594 5.698 5.04.796.343 1.417.549 1.9.702.798.254 1.525.218 2.1.132.641-.096 1.966-.804 2.244-1.58.278-.777.278-1.442.194-1.581-.083-.14-.305-.222-.638-.389z"/></svg>
+  <svg viewBox="0 0 32 32" width="24" height="24" fill="currentColor"><path d="M16.004 2.667c-7.36 0-13.333 5.973-13.333 13.334 0 2.352.615 4.66 1.782 6.687L2.667 29.333l6.822-1.79a13.27 13.27 0 006.515 1.71h.006c7.36 0 13.333-5.974 13.333-13.334 0-3.562-1.387-6.912-3.905-9.428a13.24 13.24 0 00-9.434-3.924zm0 24.4h-.005a11.05 11.05 0 01-5.633-1.542l-.404-.24-4.05 1.062 1.082-3.949-.264-.406a11.03 11.03 0 01-1.69-5.892c0-6.106 4.968-11.073 11.077-11.073 2.958 0 5.738 1.153 7.83 3.246a10.995 10.995 0 013.24 7.836c0 6.106-4.968 11.06-11.183 11.06zm6.076-8.287c-.333-.167-1.966-.97-2.27-1.08-.305-.111-.527-.167-.75.167-.222.333-.86 1.08-1.055 1.303-.194.222-.388.25-.72.083-.334-.167-1.409-.52-2.684-1.657-.992-.885-1.663-1.978-1.858-2.312-.194-.333-.02-.514.146-.68.15-.15.334-.389.5-.583.167-.195.222-.333.334-.556.111-.222.055-.417-.028-.583-.083-.167-.75-1.807-1.028-2.474-.271-.65-.546-.562-.75-.573l-.639-.011c-.222 0-.583.083-.888.417-.306.333-1.167 1.14-1.167 2.78 0 1.64 1.194 3.224 1.361 3.446.167.222 2.352 3.594 5.698 5.04.796.343 1.417.549 1.9.702.798.254 1.525.218 2.1.132.641-.096 1.966-.804 2.244-1.58.278-.777.278-1.442.194-1.581-.083-.14-.305-.222-.638-.389z"/></svg>
 </a>
 
 <script src="js/main.js" defer></script>

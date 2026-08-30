@@ -60,20 +60,20 @@
     initScrollDepthTracking();
     initClickTracking();
     initLeadForm();
+    initScrollReveal();
+    initNetworkCanvas("heroCanvas", { density: 0.00009, maxDist: 140, speed: 0.12 });
+    initNetworkCanvas("interruptionCanvas", { density: 0.00006, maxDist: 160, speed: 0.08 });
   });
 
   /* ============================================================
-     Sticky header shadow on scroll
+     Header background — transparent over the hero, blurred glass
+     once the page scrolls past it.
      ============================================================ */
   function initStickyHeader() {
     var header = document.getElementById("site-header");
     if (!header) return;
     function onScroll() {
-      if (window.scrollY > 12) {
-        header.style.boxShadow = "0 8px 30px -20px rgba(0,0,0,0.6)";
-      } else {
-        header.style.boxShadow = "none";
-      }
+      header.classList.toggle("is-scrolled", window.scrollY > 12);
     }
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -145,7 +145,7 @@
 
     // Section viewed tracking via IntersectionObserver
     if ("IntersectionObserver" in window) {
-      var watched = ["services", "why-ceaseless", "how-we-work", "about", "contact"];
+      var watched = ["positioning", "capabilities", "approach", "company", "contact"];
       var seen = {};
       var observer = new IntersectionObserver(
         function (entries) {
@@ -163,6 +163,123 @@
         if (el) observer.observe(el);
       });
     }
+  }
+
+  /* ============================================================
+     Scroll reveal — fades/lifts .reveal elements in as they enter
+     the viewport. Also flags .method__step so its top/left border
+     can draw itself in via CSS. Respects reduced-motion.
+     ============================================================ */
+  function initScrollReveal() {
+    var targets = document.querySelectorAll(".reveal, .method__step");
+    if (!targets.length) return;
+
+    if (
+      !("IntersectionObserver" in window) ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      targets.forEach(function (el) { el.classList.add("is-visible"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+    targets.forEach(function (el) { observer.observe(el); });
+  }
+
+  /* ============================================================
+     Subtle animated point network for the hero and the mid-page
+     "systems problem" interruption. Deliberately quiet — slow
+     drift, thin lines, low opacity — not a particle-effect gimmick.
+     No-op on reduced-motion or if canvas isn't supported.
+     ============================================================ */
+  function initNetworkCanvas(id, opts) {
+    var canvas = document.getElementById(id);
+    if (!canvas || !canvas.getContext) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var ctx = canvas.getContext("2d");
+    var points = [];
+    var width, height, dpr;
+    var rafId;
+
+    function resize() {
+      var rect = canvas.parentElement.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      var count = Math.round(width * height * opts.density);
+      points = [];
+      for (var i = 0; i < count; i++) {
+        points.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * opts.speed,
+          vy: (Math.random() - 0.5) * opts.speed
+        });
+      }
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, width, height);
+
+      points.forEach(function (p) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+      });
+
+      for (var i = 0; i < points.length; i++) {
+        for (var j = i + 1; j < points.length; j++) {
+          var dx = points[i].x - points[j].x;
+          var dy = points[i].y - points[j].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < opts.maxDist) {
+            ctx.strokeStyle = "rgba(197,199,201," + (1 - dist / opts.maxDist) * 0.35 + ")";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(points[j].x, points[j].y);
+            ctx.stroke();
+          }
+        }
+        ctx.fillStyle = "rgba(197,199,201,0.5)";
+        ctx.beginPath();
+        ctx.arc(points[i].x, points[i].y, 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    resize();
+    tick();
+
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        cancelAnimationFrame(rafId);
+        resize();
+        tick();
+      }, 200);
+    });
   }
 
   /* ============================================================
