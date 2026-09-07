@@ -14,4 +14,4 @@ export { methodSteps } from "./method";
 export { industries, applicability } from "./industries";
 export { partnership } from "./partnership";
 export { company, leader } from "./company";
-export { contact, serviceOptions } from "./contact";
+export { contact, contactEmail, serviceOptions } from "./contact";

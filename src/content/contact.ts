@@ -4,6 +4,8 @@ export const contact = {
   body: "Tell us where your business wants to grow and what is currently getting in the way. We'll help identify the constraint — and what should be built to remove it.",
 };
 
+export const contactEmail = "ceaselessintelligence@gmail.com";
+
 export const serviceOptions = [
   "Customer Acquisition",
   "Artificial Intelligence",

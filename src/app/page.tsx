@@ -21,6 +21,7 @@ import {
   company,
   leader,
   contact,
+  contactEmail,
 } from "@/content";
 
 export default function Home() {
@@ -416,6 +417,11 @@ export default function Home() {
                   Call / Chat on WhatsApp
                 </a>
               </div>
+
+              <p className="mt-12 font-sans text-xs uppercase tracking-[0.14em] text-muted">Email</p>
+              <a href={`mailto:${contactEmail}`} className="mt-3 block font-serif text-xl transition-opacity duration-300 hover:opacity-70">
+                {contactEmail}
+              </a>
             </Reveal>
 
             <Reveal delay={0.1}>

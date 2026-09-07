@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { serviceOptions } from "@/content";
+import { serviceOptions, contactEmail } from "@/content";
 import { trackEvent } from "@/lib/analytics";
 
 const fieldClasses =
@@ -198,9 +198,15 @@ export function LeadForm() {
         {submitting ? "Sending..." : "Start the Conversation"}
       </button>
 
-      <p role="status" aria-live="polite" className="font-sans text-sm min-h-[1.2em] text-red-400">
-        {status.kind === "error" ? status.message : ""}
-      </p>
+      {status.kind === "error" && (
+        <p role="status" aria-live="polite" className="font-sans text-sm text-red-400">
+          {status.message} Please write to us directly at{" "}
+          <a href={`mailto:${contactEmail}`} className="underline">
+            {contactEmail}
+          </a>
+          .
+        </p>
+      )}
     </form>
   );
 }
