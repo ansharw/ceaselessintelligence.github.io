@@ -9,6 +9,12 @@ Thumbs.db
 node_modules/
 .wrangler/
 
+# Next.js
+/.next/
+/out/
+*.tsbuildinfo
+next-env.d.ts
+
 # Secrets — never commit real credentials
 .dev.vars
 .env

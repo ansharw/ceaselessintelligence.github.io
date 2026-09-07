@@ -4,8 +4,9 @@
  * Routing:
  *   POST /api/submit-lead  -> handled here, server-side (HubSpot creds
  *                              live in env vars, never shipped to the browser)
- *   everything else        -> falls through to the static site via the
- *                              ASSETS binding (see wrangler.toml [assets])
+ *   everything else        -> falls through to the static Next.js export
+ *                              via the ASSETS binding (see wrangler.toml [assets],
+ *                              which points at the `out/` build directory)
  *
  * Security headers are applied to every response here (rather than
  * relying on a Pages-only `_headers` file) so they hold regardless of

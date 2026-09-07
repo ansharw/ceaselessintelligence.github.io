@@ -1,29 +1,26 @@
 # Ceaseless Intelligence — Landing Page
 
-A single-page landing page (static HTML/CSS/JS) with an elegant dark navy/blue/metal theme, built from the locked "Turn Intelligence Into Growth" website copy.
+A single-page landing page built with **Next.js (App Router) + Tailwind CSS v4**, in an editorial ivory/parchment design system (Fraunces serif + Inter sans, restrained Framer Motion reveals), built from the locked "Turn Intelligence Into Growth" website copy.
 
 ## Architecture
 
-The site runs as a single **Cloudflare Worker with Static Assets** — Cloudflare's current unified model (the successor to the older, separate "Pages" product):
+The site is a static export (`next build` → `out/`) served by a small **Cloudflare Worker with Static Assets** — Cloudflare's current unified model (the successor to the older, separate "Pages" product):
 
 ```
-index.html, css/, js/main.js, *.html   → static files, served automatically via the ASSETS binding
-src/index.js                            → the Worker: routes /api/submit-lead, everything else falls through to ASSETS
+src/app, src/components, src/content   → Next.js source; `next build` compiles this to out/
+out/                                     → static export output, served automatically via the ASSETS binding
+worker/index.js                         → the Worker: routes /api/submit-lead, everything else falls through to ASSETS
 ```
 
 The browser never talks to HubSpot directly. The form POSTs to `/api/submit-lead`,
-handled in `src/index.js`, which reads `HUBSPOT_PORTAL_ID` / `HUBSPOT_FORM_GUID`
+handled in `worker/index.js`, which reads `HUBSPOT_PORTAL_ID` / `HUBSPOT_FORM_GUID`
 from server-side environment variables and forwards the submission. Those two
 values — and any future secret (paid API keys, etc.) — never appear in
 client-side JS or dev tools. Security response headers (CSP, X-Frame-Options,
-etc.) are also set in `src/index.js`, applied to every response.
+etc.) are also set in `worker/index.js`, applied to every response.
 
-GA4's Measurement ID stays client-side in `js/main.js` (`CONFIG.GA4_ID`) —
+GA4's Measurement ID stays client-side in `src/lib/analytics.ts` (`GA4_ID`) —
 that one is designed to be public, it's not a secret.
-
-`.assetsignore` keeps repo/config files (`wrangler.toml`, `package.json`,
-`src/`, etc.) from being served as public files, even though they sit
-alongside `index.html` at the repo root.
 
 ## Running locally
 
@@ -31,37 +28,41 @@ alongside `index.html` at the repo root.
 npm install
 cp .dev.vars.example .dev.vars   # fill in HubSpot creds, or leave blank for demo mode
 npm run dev
-# open the local URL wrangler prints (usually http://localhost:8787)
+# open http://localhost:3000 — fast iteration on UI (no lead-form backend here)
 ```
 
-`npm run dev` runs `wrangler dev`, which serves the static files **and**
-runs `src/index.js` locally, so the form works exactly like production.
+To exercise the full stack including the lead-form API exactly like production:
+
+```bash
+npm run build      # static export to out/
+npx wrangler dev    # serves out/ + worker/index.js together
+```
 
 ## File structure
 
 ```
-index.html                Main page (nav, hero, services, why, process, industries, about, contact)
-thank-you.html             Thank-you page after form submission
-privacy-policy.html        Privacy policy draft (needs legal review)
-terms-of-service.html      Terms of service draft (needs legal review)
-css/style.css              Design system (navy/black + electric blue + steel metal)
-js/main.js                 Mobile nav, tracking, form submission
-src/index.js                The Worker: form handler + security headers + static asset fallback
-wrangler.toml               Cloudflare Worker/assets configuration
-.assetsignore                Files excluded from the public static site
-.dev.vars.example           Template for local secrets (copy to .dev.vars, gitignored)
+src/app/                    Next.js routes: /(home), /thank-you, /privacy, /terms
+src/components/ui/          Container, Reveal, SectionLabel, ArrowLink primitives
+src/components/layout/      Header, Footer, WhatsAppFloat, LegalLayout
+src/components/forms/       LeadForm (client component, posts to /api/submit-lead)
+src/components/analytics/   Analytics (GA4 + scroll-depth + section-viewed tracking)
+src/content/                Page copy as data (nav, hero, capabilities, method, ...)
+src/lib/analytics.ts        trackEvent()/initGA4() helpers
+worker/index.js              The Worker: form handler + security headers + static asset fallback
+wrangler.toml                Cloudflare Worker/assets configuration (assets dir: out/)
+.dev.vars.example            Template for local secrets (copy to .dev.vars, gitignored)
 ```
 
 ## Deploying to Cloudflare (step by step, from scratch)
 
 ### 1. Push this repo to GitHub
-Make sure the latest code (including `wrangler.toml`, `src/index.js`, `.assetsignore`) is committed and pushed to the branch you'll deploy from (usually `main`).
+Make sure the latest code (including `wrangler.toml`, `worker/index.js`) is committed and pushed to the branch you'll deploy from (usually `main`).
 
 ### 2. Connect the repo in Cloudflare
 1. Go to the [Cloudflare dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create**.
 2. Choose **Import a repository** (this is the current unified flow — it replaces the old separate "Pages" button).
 3. Authorize GitHub if asked, then pick this repo.
-4. Build settings: leave **Build command** empty (no build step needed) — Cloudflare will detect `wrangler.toml` and use `npx wrangler deploy` as the **Deploy command** automatically, which now matches this project's structure.
+4. Build settings: **Build command** `npm run build` (runs `next build`, producing the static export in `out/`) — Cloudflare will detect `wrangler.toml` and use `npx wrangler deploy` as the **Deploy command** automatically.
 5. Click **Save and Deploy**.
 
 ### 3. Set the HubSpot secrets
@@ -96,9 +97,9 @@ This branches depending on where your domain currently lives:
 After that, your domain points straight at this Worker with automatic SSL, and every future `git push` to `main` redeploys it.
 
 ### Migrating later
-Because `src/index.js` is a plain Worker (standard `fetch(request, env)` handler,
+Because `worker/index.js` is a plain Worker (standard `fetch(request, env)` handler,
 no framework), moving off Cloudflare later is straightforward: the static
-files work unchanged anywhere, and `src/index.js` ports easily to any
+export in `out/` works unchanged anywhere, and `worker/index.js` ports easily to any
 Node-compatible runtime (Vercel Edge Functions, a small Express route on a
 VPS, etc.) — it's ~140 lines with no Cloudflare-specific APIs beyond the
 `env.ASSETS.fetch()` call, which would be replaced by whatever static-file
@@ -115,41 +116,38 @@ The form also submits three **custom** HubSpot properties (`company_description`
 before go-live, or submissions with those fields will be rejected by HubSpot.
 
 ### 2. Google Analytics 4
-In `js/main.js`, replace `CONFIG.GA4_ID` with the real Measurement ID.
-`initGA4()` loads gtag.js and starts tracking automatically — no HTML edits
-needed. Events already tracked: `hero_cta_click`, `form_started`,
-`form_submitted`, `scroll_depth`, `section_viewed`.
+In `src/lib/analytics.ts`, replace `GA4_ID` with the real Measurement ID.
+`initGA4()` loads gtag.js and starts tracking automatically — no other edits
+needed. Events already tracked: `form_started`, `form_submitted`,
+`scroll_depth`, `section_viewed`.
 
 ### 3. Google Calendar Appointment Schedule
 Already wired up as a **link**, not an iframe — Google's Appointment Schedule
 booking pages send `X-Frame-Options: SAMEORIGIN`, so they refuse to render
 inside anyone else's `<iframe>` (confirmed by checking response headers
-directly). The "Book a Time on Google Calendar" button in the Contact
-section (`index.html`) opens the booking page in a new tab instead. To
-change the schedule, just update that link's `href` to the new booking URL —
+directly). The `calendarUrl` constant in `src/content/hero.ts` opens the
+booking page in a new tab. To change the schedule, just update that URL —
 no other code changes needed.
 
 ### 4. Email & WhatsApp
-Official contact channels are `ceaselessintelligence@gmail.com` and WhatsApp `+62 812-9112-9561`, both live in the `index.html` footer (`.footer-contact`), the Contact section's WhatsApp button, and the floating WhatsApp button. Update all four spots together if either channel changes — `privacy-policy.html` / `terms-of-service.html` just reference "the email listed in the footer" generically, so no edit needed there.
+Official contact channels are `ceaselessintelligence@gmail.com` and WhatsApp `+62 812-9112-9561`. The WhatsApp number lives in the `whatsappUrl` constant in `src/content/hero.ts`, used by the Contact section link, the footer, and the floating WhatsApp button (`src/components/layout/WhatsAppFloat.tsx`) — update it once there and all three follow. `/privacy` / `/terms` just reference "the email listed in the footer" generically, so no edit needed there.
 
 ### 5. CEO photo
-The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder & CEO) in `index.html` (`.leader-card`). Swap the placeholder `<svg>` for a real `<img src="assets/ceo.jpg" alt="Syahreza Daffa Rafiali">` once a photo file is available.
+The Company section has a placeholder avatar for Syahreza Daffa Rafiali (Founder & CEO) in `src/app/page.tsx` (the leader card). Swap the placeholder `<svg>` for a real `<Image src="/ceo.jpg" alt="Syahreza Daffa Rafiali" />` once a photo file is available (place it under `public/`).
 
 ### 6. Legal
-`privacy-policy.html` and `terms-of-service.html` are drafts — they must be reviewed by a lawyer/legal counsel before publishing, especially for compliance with Indonesia's Personal Data Protection Law (UU PDP).
+`/privacy` and `/terms` (`src/app/privacy`, `src/app/terms`) are drafts — they must be reviewed by a lawyer/legal counsel before publishing, especially for compliance with Indonesia's Personal Data Protection Law (UU PDP).
 
 ## Security notes
 
 - No secrets live in client-side code. The only value shipped to the
   browser that matters here is the GA4 Measurement ID, which is public
   by design.
-- `src/index.js` sets a Content-Security-Policy, `X-Frame-Options: DENY`,
+- `worker/index.js` sets a Content-Security-Policy, `X-Frame-Options: DENY`,
   `X-Content-Type-Options: nosniff`, and a restrictive `Permissions-Policy`
   on every response.
-- `.assetsignore` prevents `wrangler.toml`, `package.json`, and other repo
-  files from being publicly downloadable from the live site.
 - The lead form has honeypot spam protection checked **both** client-side
-  (fast path) and server-side in `src/index.js` (so it can't be bypassed by
+  (fast path) and server-side in `worker/index.js` (so it can't be bypassed by
   calling the API directly).
 - For stronger anti-spam beyond the honeypot, consider adding Cloudflare
   Turnstile (free CAPTCHA alternative) to the form, or a Cloudflare Rate
@@ -157,9 +155,9 @@ The About section has a placeholder avatar for Syahreza Daffa Rafiali (Founder &
 
 ## Design notes
 
-- No generic "AI robot" stock photos or futuristic visuals — the hero visual uses an abstract representation of a pipeline/data (bar chart, follow-up automation, CRM sync nodes) built with CSS/SVG.
-- Once real photos are available (team, office, product), they can be swapped in to replace `.hero__visual` and the "About" section to strengthen credibility.
-- Copy is locked per the approved "Turn Intelligence Into Growth" version — treat `index.html`'s visible text as final unless a new copy revision is explicitly provided.
+- No generic "AI robot" stock photos or futuristic visuals — the editorial ivory/parchment design system (borrowed from the sibling Numinous Gravitas site) relies on typography, hairline borders, and restrained motion rather than illustration.
+- Once real photos are available (team, office, product), they can be swapped in via the Company section's leader card to strengthen credibility.
+- Copy is locked per the approved "Turn Intelligence Into Growth" version — treat the text in `src/content/` as final unless a new copy revision is explicitly provided.
 
 ## Functional checklist
 
