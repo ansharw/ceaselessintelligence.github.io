@@ -30,7 +30,7 @@ const REQUIRED_FIELDS = [
   "improvementGoal"
 ];
 
-export default {
+const worker = {
   async fetch(request, env) {
     const url = new URL(request.url);
 
@@ -42,6 +42,8 @@ export default {
     return withSecurityHeaders(response);
   }
 };
+
+export default worker;
 
 function withSecurityHeaders(response) {
   const headers = new Headers(response.headers);
