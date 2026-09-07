@@ -2,6 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { NetworkCanvas } from "@/components/ui/NetworkCanvas";
 import { LeadForm } from "@/components/forms/LeadForm";
 import {
   hero,
@@ -26,8 +27,9 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex min-h-[92vh] flex-col justify-center pt-28 pb-16">
-        <Container>
+      <section className="relative flex min-h-[92vh] flex-col justify-center overflow-hidden pt-28 pb-16">
+        <NetworkCanvas className="absolute inset-0 z-0 opacity-55" density={0.00009} maxDist={140} speed={0.12} parallax />
+        <Container className="relative z-10">
           <SectionLabel className="mb-8">
             {hero.eyebrow} — {hero.eyebrowSuffix}
           </SectionLabel>
@@ -196,8 +198,9 @@ export default function Home() {
       </section>
 
       {/* Interruption */}
-      <section className="dark-section bg-dark text-dark-fg border-t border-dark-hairline py-32 sm:py-48">
-        <Container>
+      <section className="dark-section relative overflow-hidden bg-dark text-dark-fg border-t border-dark-hairline py-32 sm:py-48">
+        <NetworkCanvas className="absolute inset-0 z-0 opacity-35" density={0.00006} maxDist={160} speed={0.08} />
+        <Container className="relative z-10">
           <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl leading-[1.15]">
               {interruption.headline}
@@ -338,7 +341,7 @@ export default function Home() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <div className="border border-hairline p-8">
+              <div className="flex flex-col items-center border border-hairline p-8 text-center sm:items-start sm:text-left">
                 <span className="flex h-16 w-16 items-center justify-center rounded-full bg-ink text-ivory">
                   <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6">
                     <path

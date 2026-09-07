@@ -198,7 +198,7 @@ export function LeadForm() {
         {submitting ? "Sending..." : "Start the Conversation"}
       </button>
 
-      <p role="status" aria-live="polite" className="font-sans text-sm min-h-[1.2em] text-accent">
+      <p role="status" aria-live="polite" className="font-sans text-sm min-h-[1.2em] text-red-400">
         {status.kind === "error" ? status.message : ""}
       </p>
     </form>
