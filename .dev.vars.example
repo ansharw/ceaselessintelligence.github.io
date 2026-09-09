@@ -1,9 +1,9 @@
-# Copy this file to .dev.vars for local `npm run dev` testing.
+# Copy this file to .dev.vars for local `npm run dev` / `wrangler dev` testing.
 # .dev.vars is gitignored — never commit real credentials.
 #
-# In production these are set as encrypted environment variables in the
-# Cloudflare Pages dashboard (Settings -> Environment variables -> Secret),
-# NOT in this repo.
-
-HUBSPOT_PORTAL_ID=
-HUBSPOT_FORM_GUID=
+# Lead-notification email doesn't use a secret here — it's sent via
+# Cloudflare's native Email Workers binding (env.SEND_EMAIL), declared in
+# wrangler.toml as [[send_email]] and backed by Cloudflare Email Routing
+# (Cloudflare dashboard -> Email -> Email Routing -> Destination addresses).
+# There is currently nothing to set in this file; it's kept as a placeholder
+# for any future secret (a paid API key, etc.) the Worker might need.

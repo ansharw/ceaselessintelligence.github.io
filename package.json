@@ -2,7 +2,7 @@
   "name": "ceaselessintelligence",
   "version": "0.1.0",
   "private": true,
-  "description": "Ceaseless Intelligence — growth infrastructure site. Next.js + Tailwind static export, deployed to Cloudflare with a small Worker handling lead-form submissions to HubSpot.",
+  "description": "Ceaseless Intelligence — growth infrastructure site. Next.js + Tailwind static export, deployed to Cloudflare with a small Worker emailing lead-form submissions via Cloudflare Email Routing.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "framer-motion": "^13.2.0",
+    "mimetext": "^3.0.24",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"

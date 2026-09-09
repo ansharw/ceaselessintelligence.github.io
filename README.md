@@ -12,12 +12,12 @@ out/                                     → static export output, served automa
 worker/index.js                         → the Worker: routes /api/submit-lead, everything else falls through to ASSETS
 ```
 
-The browser never talks to HubSpot directly. The form POSTs to `/api/submit-lead`,
-handled in `worker/index.js`, which reads `HUBSPOT_PORTAL_ID` / `HUBSPOT_FORM_GUID`
-from server-side environment variables and forwards the submission. Those two
-values — and any future secret (paid API keys, etc.) — never appear in
-client-side JS or dev tools. Security response headers (CSP, X-Frame-Options,
-etc.) are also set in `worker/index.js`, applied to every response.
+The browser never sends the lead form anywhere directly. It POSTs to
+`/api/submit-lead`, handled in `worker/index.js`, which emails a plain-text
+notification via Cloudflare's native **Email Workers** binding (`env.SEND_EMAIL`,
+declared as `[[send_email]]` in `wrangler.toml`) — no third-party email API or
+secret involved. Security response headers (CSP, X-Frame-Options, etc.) are
+also set in `worker/index.js`, applied to every response.
 
 GA4's Measurement ID stays client-side in `src/lib/analytics.ts` (`GA4_ID`) —
 that one is designed to be public, it's not a secret.
@@ -26,7 +26,6 @@ that one is designed to be public, it's not a secret.
 
 ```bash
 npm install
-cp .dev.vars.example .dev.vars   # fill in HubSpot creds, or leave blank for demo mode
 npm run dev
 # open http://localhost:3000 — fast iteration on UI (no lead-form backend here)
 ```
@@ -48,9 +47,9 @@ src/components/forms/       LeadForm (client component, posts to /api/submit-lea
 src/components/analytics/   Analytics (GA4 + scroll-depth + section-viewed tracking)
 src/content/                Page copy as data (nav, hero, capabilities, method, ...)
 src/lib/analytics.ts        trackEvent()/initGA4() helpers
-worker/index.js              The Worker: form handler + security headers + static asset fallback
-wrangler.toml                Cloudflare Worker/assets configuration (assets dir: out/)
-.dev.vars.example            Template for local secrets (copy to .dev.vars, gitignored)
+worker/index.js              The Worker: form handler + email via Email Workers + security headers + static asset fallback
+wrangler.toml                Cloudflare Worker/assets config (assets dir: out/) + the [[send_email]] binding
+.dev.vars.example            Placeholder for any future local secret (copy to .dev.vars, gitignored)
 ```
 
 ## Deploying to Cloudflare (step by step, from scratch)
@@ -65,14 +64,14 @@ Make sure the latest code (including `wrangler.toml`, `worker/index.js`) is comm
 4. Build settings: **Build command** `npm run build` (runs `next build`, producing the static export in `out/`) — Cloudflare will detect `wrangler.toml` and use `npx wrangler deploy` as the **Deploy command** automatically.
 5. Click **Save and Deploy**.
 
-### 3. Set the HubSpot secrets
-1. Open the project → **Settings → Variables and Secrets**.
-2. Add, for both **Production** and **Preview**:
-   - `HUBSPOT_PORTAL_ID` — type **Secret**
-   - `HUBSPOT_FORM_GUID` — type **Secret**
-3. Save, then trigger a redeploy (push a commit, or use **Retry deployment**) so the Worker picks up the new variables.
-
-While these are unset, the form still works in **demo mode** — it accepts submissions but doesn't send them anywhere, which is safe for testing.
+### 3. Set up Email Routing for lead notifications
+No secrets to configure here — the Worker sends email via Cloudflare's native
+Email Workers binding, already declared in `wrangler.toml`. You just need
+Email Routing turned on for the domain in the Cloudflare dashboard (see
+"Cloudflare Email Routing" under "Before go-live" below for the exact steps).
+Until the destination address is verified there, the form runs in **demo
+mode** — it accepts submissions but doesn't send them anywhere, which is safe
+for testing.
 
 ### 4. Verify it's live
 1. Project → **Deployments** tab → the newest entry should say **Success**.
@@ -97,23 +96,27 @@ This branches depending on where your domain currently lives:
 After that, your domain points straight at this Worker with automatic SSL, and every future `git push` to `main` redeploys it.
 
 ### Migrating later
-Because `worker/index.js` is a plain Worker (standard `fetch(request, env)` handler,
-no framework), moving off Cloudflare later is straightforward: the static
-export in `out/` works unchanged anywhere, and `worker/index.js` ports easily to any
-Node-compatible runtime (Vercel Edge Functions, a small Express route on a
-VPS, etc.) — it's ~140 lines with no Cloudflare-specific APIs beyond the
-`env.ASSETS.fetch()` call, which would be replaced by whatever static-file
-serving the new host provides.
+The static export in `out/` works unchanged on any host. `worker/index.js` is
+otherwise a plain Worker (standard `fetch(request, env)` handler, no
+framework), but it does use two Cloudflare-specific pieces: `env.ASSETS.fetch()`
+for the static-asset fallback, and the `env.SEND_EMAIL` / `cloudflare:email`
+binding for lead notifications. Moving off Cloudflare later means swapping
+those two for whatever static-file serving and email-sending (e.g. Resend,
+Postmark, SES) the new host provides — everything else ports as-is.
 
 ## Before go-live — fill in the following placeholders
 
-### 1. HubSpot CRM (lead form)
-Set `HUBSPOT_PORTAL_ID` and `HUBSPOT_FORM_GUID` as environment variables (see deployment steps above) — not in any file in this repo. While unset, the form shows a success message in "demo mode" without sending data anywhere.
+### 1. Cloudflare Email Routing (lead-notification email)
+The lead form emails a plain-text notification from `contact@ceaselessintelligence.com`
+(`FROM_EMAIL` in `worker/index.js`) to `ceaselessintelligence@gmail.com`
+(`NOTIFY_EMAIL`), sent via Cloudflare's native Email Workers binding — no
+third-party service or API key required.
 
-The form also submits three **custom** HubSpot properties (`company_description`,
-`improvement_goal`, `services_interested`) — create these under HubSpot
-**Settings → Properties** (Contact or Deal, matching your form's object type)
-before go-live, or submissions with those fields will be rejected by HubSpot.
+1. In the Cloudflare dashboard, select the `ceaselessintelligence.com` zone → **Email → Email Routing** → enable it if not already on (this adds the required MX/TXT records automatically since the domain's DNS is on Cloudflare).
+2. Under **Destination addresses**, add `ceaselessintelligence@gmail.com` and click the verification link Cloudflare emails to it. The Worker can only send to a destination that's been verified this way.
+3. That's it on the Cloudflare side — `wrangler.toml` already declares the `[[send_email]]` binding pointing at that address, so the next deploy picks it up automatically.
+
+If the destination address isn't verified yet, the form shows a success message in "demo mode" without sending data anywhere. `FROM_EMAIL` doesn't need its own inbox — any address on a domain with Email Routing enabled works as a sender. To change either address, update both `worker/index.js` (`NOTIFY_EMAIL`/`FROM_EMAIL`) and the `destination_address` in `wrangler.toml` together.
 
 ### 2. Google Analytics 4
 In `src/lib/analytics.ts`, replace `GA4_ID` with the real Measurement ID.
@@ -130,7 +133,7 @@ booking page in a new tab. To change the schedule, just update that URL —
 no other code changes needed.
 
 ### 4. Email & WhatsApp
-Official contact channels are `ceaselessintelligence@gmail.com` and WhatsApp `+62 812-9112-9561`. The WhatsApp number lives in the `whatsappUrl` constant in `src/content/hero.ts`, used by the Contact section link, the footer, and the floating WhatsApp button (`src/components/layout/WhatsAppFloat.tsx`) — update it once there and all three follow. `/privacy` / `/terms` just reference "the email listed in the footer" generically, so no edit needed there.
+Official contact channels are `ceaselessintelligence@gmail.com` and WhatsApp `+62 812-9112-9561`. The email address lives in the `contactEmail` constant in `src/content/contact.ts` (used by the Contact section's Email block and the lead form's error-state fallback link) — that's separate from the `NOTIFY_EMAIL` constant in `worker/index.js` used for lead notifications, so update both if the address changes. The WhatsApp number lives in the `whatsappUrl` constant in `src/content/hero.ts`, used by the Contact section link, the footer, and the floating WhatsApp button (`src/components/layout/WhatsAppFloat.tsx`) — update it once there and all three follow. `/privacy` / `/terms` just reference "the email listed in the footer" generically, so no edit needed there.
 
 ### 5. CEO photo
 The Company section has a placeholder avatar for Syahreza Daffa Rafiali (Founder & CEO) in `src/app/page.tsx` (the leader card). Swap the placeholder `<svg>` for a real `<Image src="/ceo.jpg" alt="Syahreza Daffa Rafiali" />` once a photo file is available (place it under `public/`).
@@ -140,9 +143,10 @@ The Company section has a placeholder avatar for Syahreza Daffa Rafiali (Founder
 
 ## Security notes
 
-- No secrets live in client-side code. The only value shipped to the
-  browser that matters here is the GA4 Measurement ID, which is public
-  by design.
+- No secrets live in client-side code, and lead notifications don't need one
+  at all — email delivery runs entirely through a Cloudflare Workers binding.
+  The only value shipped to the browser that matters here is the GA4
+  Measurement ID, which is public by design.
 - `worker/index.js` sets a Content-Security-Policy, `X-Frame-Options: DENY`,
   `X-Content-Type-Options: nosniff`, and a restrictive `Permissions-Policy`
   on every response.
@@ -166,7 +170,7 @@ The Company section has a placeholder avatar for Syahreza Daffa Rafiali (Founder
 - [x] All CTA buttons functional (scroll to section / form)
 - [x] Mobile layout tested (390px–1440px)
 - [x] Privacy policy & terms of service published (draft)
-- [ ] Form submissions reach HubSpot — needs real Portal ID + Form GUID (set as Cloudflare secrets) + the 3 custom properties created in HubSpot
+- [ ] Form submissions email a notification — needs `ceaselessintelligence@gmail.com` verified as a destination address in Cloudflare Email Routing
 - [x] Google Calendar booking link active (opens in new tab, not embedded)
 - [ ] Analytics events verified in GA4 — needs real Measurement ID
 - [ ] CEO photo installed — placeholder avatar in place for now

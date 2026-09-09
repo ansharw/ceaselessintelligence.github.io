@@ -1,7 +1,15 @@
 name = "ceaselessintelligence"
 compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
 main = "worker/index.js"
 
 [assets]
 directory = "./out"
 binding = "ASSETS"
+
+# Cloudflare Email Routing must already have this destination verified
+# (Cloudflare -> Email -> Email Routing -> Destination addresses) before
+# the Worker can send to it via env.SEND_EMAIL.
+[[send_email]]
+name = "SEND_EMAIL"
+destination_address = "ceaselessintelligence@gmail.com"

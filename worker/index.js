@@ -2,8 +2,10 @@
  * Cloudflare Worker entry point (unified Workers + Static Assets model).
  *
  * Routing:
- *   POST /api/submit-lead  -> handled here, server-side (HubSpot creds
- *                              live in env vars, never shipped to the browser)
+ *   POST /api/submit-lead  -> handled here, server-side. Emails a lead
+ *                              notification via Cloudflare's native Email
+ *                              Workers binding (env.SEND_EMAIL) — no
+ *                              third-party API key needed.
  *   everything else        -> falls through to the static Next.js export
  *                              via the ASSETS binding (see wrangler.toml [assets],
  *                              which points at the `out/` build directory)
@@ -12,6 +14,17 @@
  * relying on a Pages-only `_headers` file) so they hold regardless of
  * platform conventions.
  */
+
+import { EmailMessage } from "cloudflare:email";
+import { createMimeMessage, Mailbox } from "mimetext";
+
+// Must already be a verified destination address in Cloudflare Email Routing
+// (Cloudflare -> Email -> Email Routing -> Destination addresses), and match
+// the `destination_address` set on the [[send_email]] binding in wrangler.toml.
+const NOTIFY_EMAIL = "ceaselessintelligence@gmail.com";
+// Any address on a domain with Email Routing enabled in Cloudflare — this is
+// just the "From" the notification appears to come from, no inbox required.
+const FROM_EMAIL = "contact@ceaselessintelligence.com";
 
 const SECURITY_HEADERS = {
   "X-Frame-Options": "DENY",
@@ -86,47 +99,52 @@ async function handleSubmitLead(request, env) {
     return jsonResponse({ error: "Invalid email" }, 400);
   }
 
-  const portalId = env.HUBSPOT_PORTAL_ID;
-  const formGuid = env.HUBSPOT_FORM_GUID;
-
-  if (!portalId || !formGuid) {
-    // Not configured yet — demo mode, nothing is sent anywhere.
+  if (!env.SEND_EMAIL) {
+    // Binding not available (e.g. local dev without the Email Routing
+    // destination set up) — demo mode, nothing is sent anywhere.
     return jsonResponse({ ok: true, demo: true });
   }
 
-  const hubspotUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`;
-
-  const services = Array.isArray(data.services) ? data.services.filter((s) => typeof s === "string") : [];
-
-  const payload = {
-    fields: [
-      { name: "firstname", value: data.fullName.trim() },
-      { name: "company", value: data.companyName.trim() },
-      { name: "email", value: data.email.trim() },
-      { name: "website", value: (data.website || "").trim() },
-      // Custom HubSpot properties — create these under Settings > Properties
-      // (Contact or Deal) before go-live, or the submission will 400.
-      { name: "company_description", value: data.companyDescription.trim() },
-      { name: "improvement_goal", value: data.improvementGoal.trim() },
-      { name: "services_interested", value: services.join(";") }
-    ],
-    context: {
-      pageUri: request.headers.get("referer") || "",
-      pageName: "Ceaseless Intelligence"
-    }
-  };
-
-  const hubspotRes = await fetch(hubspotUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  if (!hubspotRes.ok) {
-    return jsonResponse({ error: "CRM submission failed" }, 502);
+  const sent = await sendLeadEmail(data, env);
+  if (!sent) {
+    return jsonResponse({ error: "Email notification failed" }, 502);
   }
 
   return jsonResponse({ ok: true });
+}
+
+async function sendLeadEmail(data, env) {
+  const services = Array.isArray(data.services) ? data.services.filter((s) => typeof s === "string") : [];
+
+  const bodyText = [
+    `Name: ${data.fullName.trim()}`,
+    `Company: ${data.companyName.trim()}`,
+    `Email: ${data.email.trim()}`,
+    `Website: ${(data.website || "").trim() || "—"}`,
+    `Services: ${services.join(", ") || "—"}`,
+    "",
+    "What does your company do?",
+    data.companyDescription.trim(),
+    "",
+    "Constraint they're trying to remove:",
+    data.improvementGoal.trim()
+  ].join("\n");
+
+  const msg = createMimeMessage();
+  msg.setSender({ name: "Ceaseless Intelligence", addr: FROM_EMAIL });
+  msg.setRecipient(NOTIFY_EMAIL);
+  msg.setSubject(`New lead: ${data.companyName.trim()}`);
+  msg.setHeader("Reply-To", new Mailbox(data.email.trim()));
+  msg.addMessage({ contentType: "text/plain", data: bodyText });
+
+  try {
+    const message = new EmailMessage(FROM_EMAIL, NOTIFY_EMAIL, msg.asRaw());
+    await env.SEND_EMAIL.send(message);
+    return true;
+  } catch (err) {
+    console.error("Email send failed:", err);
+    return false;
+  }
 }
 
 function jsonResponse(body, status = 200) {
